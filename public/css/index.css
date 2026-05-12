@@ -1,1 +1,234 @@
-/*codigo css necesario para el index.html*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #80adc9;
+}
+
+/* -------- PÁGINA DE INICIO -------- */
+
+.navbar {
+    height: 64px;
+    background-color: #d7eafa;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    gap: 25px;
+}
+
+.navbar h1 {
+    font-size: 38px;
+    font-weight: 900;
+    color: #000;
+}
+
+.navbar nav {
+    display: flex;
+    gap: 18px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #111;
+    font-size: 14px;
+}
+
+.acciones {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.btn-registro {
+    background-color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+}
+
+.inicio {
+    height: calc(100vh - 64px);
+    background: linear-gradient(to right, #c7def0, #78a9ca);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.mapa {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background-color: #f4f7fb;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+}
+
+.mapa::before {
+    content: "";
+    position: absolute;
+    inset: -20px;
+    background:
+        linear-gradient(25deg, transparent 42%, #b7c9d6 43%, #b7c9d6 48%, transparent 49%),
+        linear-gradient(95deg, transparent 44%, #c5d4dd 45%, #c5d4dd 49%, transparent 50%),
+        linear-gradient(145deg, transparent 45%, #aebfca 46%, #aebfca 50%, transparent 51%);
+    background-size: 95px 95px, 120px 120px, 150px 150px;
+    opacity: 0.9;
+}
+
+.mapa::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 25% 25%, #3aa76d 0 5px, transparent 6px),
+        radial-gradient(circle at 68% 35%, #5d7f95 0 4px, transparent 5px),
+        radial-gradient(circle at 55% 72%, #3aa76d 0 5px, transparent 6px),
+        linear-gradient(#e7edf2 18px, transparent 19px),
+        linear-gradient(90deg, #e7edf2 18px, transparent 19px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 55px 55px, 55px 55px;
+    opacity: 0.75;
+}
+
+.uta {
+    position: absolute;
+    left: 45px;
+    bottom: 85px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #416071;
+    z-index: 2;
+}
+
+.lugar {
+    position: absolute;
+    right: 35px;
+    top: 105px;
+    font-size: 12px;
+    color: #516b7a;
+    z-index: 2;
+}
+
+.presentacion {
+    text-align: center;
+}
+
+.presentacion h2 {
+    font-size: 80px;
+    color: white;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.carro {
+    font-size: 60px;
+    margin-top: 20px;
+}
+
+/* -------- PÁGINA CREAR CUENTA -------- */
+
+.barra-registro {
+    height: 64px;
+    background: linear-gradient(to right, #9ed0f3, #149af2);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    position: relative;
+}
+
+.logo {
+    text-decoration: none;
+    color: black;
+    font-size: 36px;
+    font-weight: 900;
+}
+
+.titulo-registro {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #dceefa;
+    padding: 12px 35px;
+    border-radius: 28px;
+    color: #22384a;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.contenedor-formulario {
+    height: calc(100vh - 64px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tarjeta-formulario {
+    width: 390px;
+    background-color: #eaf3fa;
+    border-radius: 20px;
+    padding: 28px 60px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tarjeta-formulario label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d1d1d;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+}
+
+.tarjeta-formulario input {
+    width: 170px;
+    height: 23px;
+    border: none;
+    border-radius: 14px;
+    background-color: #969696;
+    color: white;
+    padding: 0 12px;
+    outline: none;
+}
+
+.tarjeta-formulario input:focus {
+    background-color: #7f7f7f;
+}
+
+.codigo {
+    width: 120px;
+    height: 22px;
+    background-color: #d3eafa;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.codigo span {
+    width: 11px;
+    height: 11px;
+    background-color: #6f8df0;
+    border-radius: 50%;
+}
+
+button {
+    width: 130px;
+    height: 28px;
+    border: none;
+    border-radius: 14px;
+    background-color: #cbe6fa;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #b7daf2;
+}
