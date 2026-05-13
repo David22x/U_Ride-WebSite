@@ -14,57 +14,48 @@
        SIDEBAR
   ══════════════════════════════════════════ -->
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-top">
+    <div class="sidebarTop">
       <div class="logo">
         <svg width="34" height="34" viewBox="0 0 48 48" fill="none">
           <rect width="48" height="48" rx="13" fill="#2563EB"/>
           <path d="M10 32 Q24 14 38 32" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none"/>
           <circle cx="24" cy="19" r="4" fill="white"/>
         </svg>
-        <span class="logo-txt">U-Ride</span>
+        <span class="logoTxt">U-Ride</span>
       </div>
 
       <nav class="nav">
-        <a href="#" class="nav-item active" data-view="inicio">
+        <a href="#" class="navItem active" data-view="inicio">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           Inicio
         </a>
-        <a href="#" class="nav-item" data-view="buscar">
+        <a href="#" class="navItem" data-view="buscar">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           Buscar viaje
         </a>
-        <a href="#" class="nav-item" data-view="mis-viajes">
+        <a href="#" class="navItem" data-view="misViajes">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           Mis viajes
         </a>
-        <a href="#" class="nav-item" id="nav-crear">
+        <a href="#" class="navItem" id="navCrear">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
           Crear viaje
         </a>
-        <a href="#" class="nav-item" data-view="perfil">
+        <a href="#" class="navItem" data-view="perfil">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Mi perfil
         </a>
       </nav>
     </div>
 
-    <!-- Modo C/P toggle -->
-    <div class="mode-toggle" id="mode-toggle">
-      <span class="mode-label">Modo actual</span>
-      <div class="toggle-pill">
-        <button class="toggle-opt active" id="btn-pasajero">Pasajero</button>
-        <button class="toggle-opt" id="btn-conductor">Conductor</button>
-      </div>
-    </div>
-
     <!-- Usuario -->
-    <div class="sidebar-user">
-      <div class="user-avatar" id="user-avatar">D</div>
-      <div class="user-info">
-        <span class="user-name" id="user-name">Cargando…</span>
-        <span class="user-role" id="user-role">Estudiante</span>
+    <div class="sidebarUser">
+      <div class="userAvatar" id="userAvatar">D</div>
+      <div class="userInfo">
+        <span class="userName" id="userName">Cargando…</span>
+        <span class="userRole" id="userRole">Estudiante</span>
       </div>
-      <button class="btn-logout" id="btn-logout" title="Cerrar sesión">
+      <button class="btnLogout" id="btnLogout" title="Cerrar sesión">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </button>
     </div>
@@ -73,256 +64,339 @@
   <!-- ══════════════════════════════════════════
        CONTENIDO PRINCIPAL
   ══════════════════════════════════════════ -->
-  <div class="main-wrap">
+  <div class="mainWrap">
 
     <!-- Top bar -->
     <header class="topbar">
-      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Menú">
+      <button class="sidebarToggle" id="sidebarToggle" aria-label="Menú">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
-      <div class="topbar-search">
+      <div class="topbarSearch">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="search-input" placeholder="Buscar por zona o ruta…"/>
+        <input type="text" id="searchInput" placeholder="Buscar por zona o ruta…"/>
       </div>
-      <div class="topbar-right">
+      <div class="topbarRight">
+        <!-- ★ Botón de cambio de rol en topbar -->
+        <button class="rolSwitchBtn" id="rolSwitchBtn" aria-label="Cambiar rol" title="Cambiar a modo conductor">
+          <span class="rolSwitchIcon">
+            <!-- Icono pasajero -->
+            <svg class="iconPasajero" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <!-- Icono conductor -->
+            <svg class="iconConductor" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </span>
+          <span class="rolSwitchLabel" id="rolSwitchLabel">Pasajero</span>
+          <svg class="rolSwitchArrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <!-- Dropdown del rol -->
+        <div class="rolDropdown hidden" id="rolDropdown">
+          <button class="rolOption active" id="optPasajero" data-rol="pasajero">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Pasajero
+          </button>
+          <button class="rolOption" id="optConductor" data-rol="conductor">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Conductor
+          </button>
+        </div>
         <!-- Notificaciones -->
-        <button class="notif-btn" id="notif-btn" aria-label="Notificaciones">
+        <button class="notifBtn" id="notifBtn" aria-label="Notificaciones">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span class="notif-badge hidden" id="notif-badge">0</span>
+          <span class="notifBadge hidden" id="notifBadge">0</span>
         </button>
       </div>
     </header>
 
     <!-- Panel de notificaciones -->
-    <div class="notif-panel hidden" id="notif-panel">
-      <div class="notif-header">
+    <div class="notifPanel hidden" id="notifPanel">
+      <div class="notifHeader">
         <span>Notificaciones</span>
-        <button class="notif-clear" id="notif-clear">Limpiar</button>
+        <button class="notifClear" id="notifClear">Limpiar</button>
       </div>
-      <ul class="notif-list" id="notif-list">
-        <li class="notif-empty">Sin notificaciones nuevas</li>
+      <ul class="notifList" id="notifList">
+        <li class="notifEmpty">Sin notificaciones nuevas</li>
       </ul>
     </div>
 
     <!-- ── VISTA: INICIO ────────────────────────────────── -->
-    <main class="view active" id="view-inicio">
+    <main class="view active" id="viewInicio">
 
       <!-- Saludo -->
       <section class="greeting">
         <div>
-          <h1 class="greeting-title" id="greeting-msg">Buenos días 👋</h1>
-          <p class="greeting-sub">¿Qué necesitas hoy?</p>
+          <h1 class="greetingTitle" id="greetingMsg">Buenos días 👋</h1>
+          <p class="greetingSub">¿Qué necesitas hoy?</p>
         </div>
-        <div class="greeting-stats">
-          <div class="stat-pill">
-            <span class="stat-n" id="stat-viajes">—</span>
-            <span class="stat-l">viajes realizados</span>
+        <div class="greetingStats">
+          <div class="statPill">
+            <span class="statN" id="statViajes">—</span>
+            <span class="statL">viajes realizados</span>
           </div>
-          <div class="stat-pill">
-            <span class="stat-n" id="stat-rep">—</span>
-            <span class="stat-l">reputación</span>
+          <div class="statPill">
+            <span class="statN" id="statRep">—</span>
+            <span class="statL">reputación</span>
           </div>
         </div>
       </section>
 
+      <!-- Banner de modo activo -->
+      <div class="modeBanner" id="modeBanner">
+        <span class="modeBannerIcon" id="modeBannerIcon">🧍</span>
+        <div>
+          <strong id="modeBannerTitle">Modo Pasajero activo</strong>
+          <p id="modeBannerSub">Puedes buscar y solicitar viajes disponibles.</p>
+        </div>
+      </div>
+
       <!-- Acciones rápidas -->
-      <section class="quick-actions">
-        <button class="qa-card qa-buscar" data-view="buscar">
-          <div class="qa-icon">
+      <section class="quickActions">
+        <button class="qaCard qaBuscar" data-view="buscar">
+          <div class="qaIcon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
-          <span class="qa-title">Buscar viaje</span>
-          <span class="qa-sub">Encuentra un cupo</span>
+          <span class="qaTitle">Buscar viaje</span>
+          <span class="qaSub">Encuentra un cupo</span>
         </button>
-        <button class="qa-card qa-crear" id="qa-crear">
-          <div class="qa-icon">
+        <button class="qaCard qaCrear" id="qaCrear">
+          <div class="qaIcon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
           </div>
-          <span class="qa-title">Publicar viaje</span>
-          <span class="qa-sub">Ofrecer cupos</span>
+          <span class="qaTitle">Publicar viaje</span>
+          <span class="qaSub">Ofrecer cupos</span>
         </button>
-        <button class="qa-card qa-historial" data-view="mis-viajes">
-          <div class="qa-icon">
+        <button class="qaCard qaHistorial" data-view="misViajes">
+          <div class="qaIcon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v10l4 4"/><circle cx="12" cy="12" r="10"/></svg>
           </div>
-          <span class="qa-title">Mis viajes</span>
-          <span class="qa-sub">Historial</span>
+          <span class="qaTitle">Mis viajes</span>
+          <span class="qaSub">Historial</span>
         </button>
-        <button class="qa-card qa-perfil" data-view="perfil">
-          <div class="qa-icon">
+        <button class="qaCard qaPerfil" data-view="perfil">
+          <div class="qaIcon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
-          <span class="qa-title">Mi perfil</span>
-          <span class="qa-sub">Editar datos</span>
+          <span class="qaTitle">Mi perfil</span>
+          <span class="qaSub">Editar datos</span>
         </button>
       </section>
 
       <!-- Viajes disponibles -->
-      <section class="section-block">
-        <div class="section-head">
-          <h2 class="section-title">Viajes disponibles</h2>
-          <a href="#" class="section-link" data-view="buscar">Ver todos →</a>
+      <section class="sectionBlock">
+        <div class="sectionHead">
+          <h2 class="sectionTitle">Viajes disponibles</h2>
+          <a href="#" class="sectionLink" data-view="buscar">Ver todos →</a>
         </div>
-        <div class="viajes-grid" id="viajes-grid">
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
+        <div class="viajesGrid" id="viajesGrid">
+          <div class="skeletonCard"></div>
+          <div class="skeletonCard"></div>
+          <div class="skeletonCard"></div>
         </div>
       </section>
 
       <!-- Solicitudes recientes (modo conductor) -->
-      <section class="section-block" id="section-solicitudes" style="display:none">
-        <div class="section-head">
-          <h2 class="section-title">Solicitudes recientes</h2>
-          <span class="badge-count" id="badge-sol">0</span>
+      <section class="sectionBlock" id="sectionSolicitudes" style="display:none">
+        <div class="sectionHead">
+          <h2 class="sectionTitle">Solicitudes recientes</h2>
+          <span class="badgeCount" id="badgeSol">0</span>
         </div>
-        <div class="solicitudes-list" id="solicitudes-list"></div>
+        <div class="solicitudesList" id="solicitudesList"></div>
       </section>
 
     </main>
 
     <!-- ── VISTA: BUSCAR ────────────────────────────────── -->
-    <main class="view" id="view-buscar">
-      <h1 class="page-title">Buscar viaje</h1>
-      <div class="search-bar-full">
-        <div class="sbar-field">
+    <main class="view" id="viewBuscar">
+      <h1 class="pageTitle">Buscar viaje</h1>
+      <div class="searchBarFull">
+        <div class="sbarField">
           <label>Origen</label>
-          <input type="text" id="filtro-origen" placeholder="Zona de salida…"/>
+          <input type="text" id="filtroOrigen" placeholder="Zona de salida…"/>
         </div>
-        <div class="sbar-field">
+        <div class="sbarField">
           <label>Destino</label>
-          <input type="text" id="filtro-destino" placeholder="Campus o zona…"/>
+          <input type="text" id="filtroDestino" placeholder="Campus o zona…"/>
         </div>
-        <div class="sbar-field">
+        <div class="sbarField">
           <label>Fecha</label>
-          <input type="date" id="filtro-fecha"/>
+          <input type="date" id="filtroFecha"/>
         </div>
-        <button class="btn-buscar" id="btn-buscar-viajes">Buscar</button>
+        <button class="btnBuscar" id="btnBuscarViajes">Buscar</button>
       </div>
-      <div class="viajes-grid" id="viajes-grid-buscar"></div>
+      <div class="viajesGrid" id="viajesGridBuscar"></div>
     </main>
 
     <!-- ── VISTA: MIS VIAJES ────────────────────────────── -->
-    <main class="view" id="view-mis-viajes">
-      <h1 class="page-title">Mis viajes</h1>
+    <main class="view" id="viewMisViajes">
+      <h1 class="pageTitle">Mis viajes</h1>
       <div class="tabs">
-        <button class="tab active" data-tab="como-pasajero">Como pasajero</button>
-        <button class="tab" data-tab="como-conductor">Como conductor</button>
+        <button class="tab active" data-tab="comoPasajero">Como pasajero</button>
+        <button class="tab" data-tab="comoConductor">Como conductor</button>
       </div>
-      <div class="tab-content" id="tab-como-pasajero"></div>
-      <div class="tab-content hidden" id="tab-como-conductor"></div>
+      <div class="tabContent" id="tabComoPasajero"></div>
+      <div class="tabContent hidden" id="tabComoConductor"></div>
     </main>
 
     <!-- ── VISTA: PERFIL ────────────────────────────────── -->
-    <main class="view" id="view-perfil">
-      <h1 class="page-title">Mi perfil</h1>
-      <div class="perfil-card">
-        <div class="perfil-avatar-wrap">
-          <div class="perfil-avatar" id="perfil-avatar">D</div>
-          <button class="btn-avatar-edit">Cambiar foto</button>
+    <main class="view" id="viewPerfil">
+      <h1 class="pageTitle">Mi perfil</h1>
+      <div class="perfilLayout">
+
+        <!-- ─ Tarjeta datos personales ─ -->
+        <div class="perfilCard">
+          <div class="perfilCardHeader">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Datos personales
+          </div>
+          <div class="perfilAvatarWrap">
+            <div class="perfilAvatar" id="perfilAvatar">D</div>
+            <button class="btnAvatarEdit" id="btnAvatarEdit">Cambiar foto</button>
+            <input type="file" id="inputFoto" accept="image/*" class="hidden"/>
+          </div>
+          <form class="perfilForm" id="formPerfil">
+            <div class="pfRow">
+              <div class="pfGroup">
+                <label>Nombre</label>
+                <input type="text" id="pfNombre"/>
+              </div>
+              <div class="pfGroup">
+                <label>Apellido</label>
+                <input type="text" id="pfApellido"/>
+              </div>
+            </div>
+            <div class="pfGroup">
+              <label>Correo institucional</label>
+              <input type="email" id="pfCorreo" disabled/>
+            </div>
+            <div class="pfRow">
+              <div class="pfGroup">
+                <label>Carrera</label>
+                <input type="text" id="pfCarrera"/>
+              </div>
+              <div class="pfGroup">
+                <label>Zona / Barrio</label>
+                <input type="text" id="pfZona"/>
+              </div>
+            </div>
+            <div class="pfGroup">
+              <label>Teléfono (opcional)</label>
+              <input type="tel" id="pfTelefono" placeholder="+593…"/>
+            </div>
+            <div class="alert" id="alertPerfil"></div>
+            <button type="submit" class="btnGuardar">Guardar cambios</button>
+          </form>
         </div>
-        <form class="perfil-form" id="form-perfil">
-          <div class="pf-row">
-            <div class="pf-group">
-              <label>Nombre</label>
-              <input type="text" id="pf-nombre"/>
-            </div>
-            <div class="pf-group">
-              <label>Apellido</label>
-              <input type="text" id="pf-apellido"/>
-            </div>
+
+        <!-- ─ Tarjeta info de conductor ─ -->
+        <div class="perfilCard" id="cardConductor">
+          <div class="perfilCardHeader">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Información de conductor
           </div>
-          <div class="pf-group">
-            <label>Correo institucional</label>
-            <input type="email" id="pf-correo" disabled/>
-          </div>
-          <div class="pf-row">
-            <div class="pf-group">
-              <label>Carrera</label>
-              <input type="text" id="pf-carrera"/>
+          <p class="perfilCardDesc">
+            Para publicar viajes, completa los datos de tu vehículo. Esta información será visible para los pasajeros.
+          </p>
+          <form class="perfilForm" id="formConductor">
+            <div class="pfRow">
+              <div class="pfGroup">
+                <label>Marca / Modelo</label>
+                <input type="text" id="pfVehiculo" placeholder="Ej: Chevrolet Aveo"/>
+              </div>
+              <div class="pfGroup">
+                <label>Color</label>
+                <input type="text" id="pfColor" placeholder="Ej: Gris plata"/>
+              </div>
             </div>
-            <div class="pf-group">
-              <label>Zona / Barrio</label>
-              <input type="text" id="pf-zona"/>
+            <div class="pfRow">
+              <div class="pfGroup">
+                <label>Placa</label>
+                <input type="text" id="pfPlaca" placeholder="Ej: ABC-1234" maxlength="8"/>
+              </div>
+              <div class="pfGroup">
+                <label>Nº de licencia</label>
+                <input type="text" id="pfLicencia" placeholder="Nro. de licencia"/>
+              </div>
             </div>
-          </div>
-          <div class="pf-group">
-            <label>Teléfono (opcional)</label>
-            <input type="tel" id="pf-telefono" placeholder="+593…"/>
-          </div>
-          <div class="alert" id="alert-perfil"></div>
-          <button type="submit" class="btn-guardar">Guardar cambios</button>
-        </form>
-      </div>
+            <div class="pfGroup">
+              <label>Vencimiento licencia</label>
+              <input type="date" id="pfLicenciaVence"/>
+            </div>
+            <div class="alert" id="alertConductor"></div>
+            <button type="submit" class="btnGuardar">Guardar datos del vehículo</button>
+          </form>
+        </div>
+
+      </div><!-- /perfilLayout -->
     </main>
 
-  </div><!-- /main-wrap -->
+  </div><!-- /mainWrap -->
 
   <!-- ══ MODAL: CREAR VIAJE ══════════════════════════ -->
-  <div class="modal-overlay hidden" id="modal-crear">
+  <div class="modalOverlay hidden" id="modalCrear">
     <div class="modal">
-      <div class="modal-header">
+      <div class="modalHeader">
         <h2>Publicar viaje</h2>
-        <button class="modal-close" id="modal-close">✕</button>
+        <button class="modalClose" id="modalClose">✕</button>
       </div>
-      <form id="form-crear-viaje">
-        <div class="modal-body">
-          <div class="pf-row">
-            <div class="pf-group">
+      <form id="formCrearViaje">
+        <div class="modalBody">
+          <div class="pfRow">
+            <div class="pfGroup">
               <label>Origen (zona)</label>
-              <input type="text" id="cv-origen" placeholder="Ej: Pillaro" required/>
+              <input type="text" id="cvOrigen" placeholder="Ej: Pillaro" required/>
             </div>
-            <div class="pf-group">
+            <div class="pfGroup">
               <label>Destino</label>
-              <input type="text" id="cv-destino" placeholder="Ej: UTA Huachi" required/>
+              <input type="text" id="cvDestino" placeholder="Ej: UTA Huachi" required/>
             </div>
           </div>
-          <div class="pf-row">
-            <div class="pf-group">
+          <div class="pfRow">
+            <div class="pfGroup">
               <label>Fecha</label>
-              <input type="date" id="cv-fecha" required/>
+              <input type="date" id="cvFecha" required/>
             </div>
-            <div class="pf-group">
+            <div class="pfGroup">
               <label>Hora salida</label>
-              <input type="time" id="cv-hora-salida" required/>
+              <input type="time" id="cvHoraSalida" required/>
             </div>
-            <div class="pf-group">
+            <div class="pfGroup">
               <label>Hora llegada</label>
-              <input type="time" id="cv-hora-llegada" required/>
+              <input type="time" id="cvHoraLlegada" required/>
             </div>
           </div>
-          <div class="pf-group">
+          <div class="pfGroup">
             <label>Cupos disponibles</label>
-            <input type="number" id="cv-cupos" min="1" max="10" value="3" required/>
+            <input type="number" id="cvCupos" min="1" max="10" value="3" required/>
           </div>
-          <div class="pf-group">
+          <div class="pfGroup">
             <label>Notas / Reglas del viaje</label>
-            <textarea id="cv-notas" rows="3" placeholder="Puntualidad, no fumar, dinero en efectivo…"></textarea>
+            <textarea id="cvNotas" rows="3" placeholder="Puntualidad, no fumar, dinero en efectivo…"></textarea>
           </div>
-          <div class="alert" id="alert-crear"></div>
+          <div class="alert" id="alertCrear"></div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-ghost" id="modal-cancel">Cancelar</button>
-          <button type="submit" class="btn-primary-sm" id="btn-publicar">Publicar viaje</button>
+        <div class="modalFooter">
+          <button type="button" class="btnGhost" id="modalCancel">Cancelar</button>
+          <button type="submit" class="btnPrimarySm" id="btnPublicar">Publicar viaje</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- ══ MODAL: DETALLE DE VIAJE ═════════════════════ -->
-  <div class="modal-overlay hidden" id="modal-viaje">
+  <div class="modalOverlay hidden" id="modalViaje">
     <div class="modal">
-      <div class="modal-header">
-        <h2 id="detail-ruta">Ruta</h2>
-        <button class="modal-close" id="detail-close">✕</button>
+      <div class="modalHeader">
+        <h2 id="detailRuta">Ruta</h2>
+        <button class="modalClose" id="detailClose">✕</button>
       </div>
-      <div class="modal-body" id="detail-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn-ghost" id="detail-cancel">Cerrar</button>
-        <button type="button" class="btn-primary-sm" id="btn-solicitar">Solicitar cupo</button>
+      <div class="modalBody" id="detailBody"></div>
+      <div class="modalFooter">
+        <button type="button" class="btnGhost" id="detailCancel">Cerrar</button>
+        <button type="button" class="btnPrimarySm" id="btnSolicitar">Solicitar cupo</button>
       </div>
     </div>
   </div>
+
+  <!-- ══ TOAST ════════════════════════════════════════ -->
+  <div class="toastContainer" id="toastContainer"></div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/home.js"></script>

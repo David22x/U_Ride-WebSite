@@ -110,7 +110,7 @@ formLogin?.addEventListener("submit", async (e) => {
     if (json.usuario.rol === "administrador") {
       window.location.href = "/admin.html";
     } else {
-      window.location.href = "/viajes.html";
+      window.location.href = "/home.html";
     }
   } catch {
     showAlert("Sin conexión. Verifica tu internet e intenta de nuevo.");
