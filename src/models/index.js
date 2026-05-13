@@ -1,44 +1,112 @@
-const { sequelize } = require('../config/database');
+const { sequelize } = require("../config/database");
 
-const Usuario            = require('./usuario.model');
-const VerificacionCorreo = require('./verificacionCorreo.model');
-const Conductor          = require('./conductor.model');
-const Pasajero           = require('./pasajero.model');
-const Viaje              = require('./viaje.model');
-const ReglasViaje        = require('./reglasViaje.model');
-const Solicitud          = require('./solicitud.model');
-const Participacion      = require('./participacion.model');
-const Calificacion       = require('./calificacion.model');
-const Resena             = require('./resena.model');
-const Reporte            = require('./reporte.model');
-const AccionAdministrativa = require('./accionAdministrativa.model');
+const Usuario = require("./usuario.model");
+const VerificacionCorreo = require("./verificacionCorreo.model");
+const Conductor = require("./conductor.model");
+const Pasajero = require("./pasajero.model");
+const Viaje = require("./viaje.model");
+const ReglasViaje = require("./reglasViaje.model");
+const Solicitud = require("./solicitud.model");
+const Participacion = require("./participacion.model");
+const Calificacion = require("./calificacion.model");
+const Resena = require("./resena.model");
+const Reporte = require("./reporte.model");
+const AccionAdministrativa = require("./accionAdministrativa.model");
+const RegistroPendiente = require("./registroPendiente.model");
 
 // ── Relaciones ────────────────────────────────────────
-Usuario.hasOne(Conductor,   { foreignKey: 'usuarioId', as: 'conductor' });
-Usuario.hasOne(Pasajero,    { foreignKey: 'usuarioId', as: 'pasajero' });
-Conductor.belongsTo(Usuario, { foreignKey: 'usuarioId' });
-Pasajero.belongsTo(Usuario,  { foreignKey: 'usuarioId' });
 
-Conductor.hasMany(Viaje,    { foreignKey: 'conductorId', as: 'viajes' });
-Viaje.belongsTo(Conductor,  { foreignKey: 'conductorId', as: 'conductor' });
-Viaje.hasOne(ReglasViaje,   { foreignKey: 'viajeId',    as: 'reglas' });
-Viaje.hasMany(Solicitud,    { foreignKey: 'viajeId',    as: 'solicitudes' });
-Viaje.hasMany(Participacion,{ foreignKey: 'viajeId',    as: 'participantes' });
+Usuario.hasOne(Conductor, {
+  foreignKey: "usuario_id",
+  as: "conductor",
+});
 
-Pasajero.hasMany(Solicitud, { foreignKey: 'pasajeroId', as: 'solicitudes' });
-Solicitud.belongsTo(Pasajero,{ foreignKey: 'pasajeroId', as: 'pasajero' });
-Solicitud.belongsTo(Viaje,  { foreignKey: 'viajeId',    as: 'viaje' });
+Usuario.hasOne(Pasajero, {
+  foreignKey: "usuario_id",
+  as: "pasajero",
+});
 
-Usuario.hasMany(Calificacion,{ foreignKey: 'evaluadorId', as: 'calificacionesHechas' });
-Usuario.hasMany(Calificacion,{ foreignKey: 'evaluadoId',  as: 'calificacionesRecibidas' });
-Usuario.hasMany(Resena,      { foreignKey: 'autorId',     as: 'resenasHechas' });
-Usuario.hasMany(Reporte,     { foreignKey: 'reportanteId',as: 'reportes' });
+Conductor.belongsTo(Usuario, {
+  foreignKey: "usuario_id",
+});
+
+Pasajero.belongsTo(Usuario, {
+  foreignKey: "usuario_id",
+});
+
+Conductor.hasMany(Viaje, {
+  foreignKey: "conductor_id",
+  as: "viajes",
+});
+
+Viaje.belongsTo(Conductor, {
+  foreignKey: "conductor_id",
+  as: "conductor",
+});
+
+Viaje.hasOne(ReglasViaje, {
+  foreignKey: "viaje_id",
+  as: "reglas",
+});
+
+Viaje.hasMany(Solicitud, {
+  foreignKey: "viaje_id",
+  as: "solicitudes",
+});
+
+Viaje.hasMany(Participacion, {
+  foreignKey: "viaje_id",
+  as: "participantes",
+});
+
+Pasajero.hasMany(Solicitud, {
+  foreignKey: "pasajero_id",
+  as: "solicitudes",
+});
+
+Solicitud.belongsTo(Pasajero, {
+  foreignKey: "pasajero_id",
+  as: "pasajero",
+});
+
+Solicitud.belongsTo(Viaje, {
+  foreignKey: "viaje_id",
+  as: "viaje",
+});
+
+Usuario.hasMany(Calificacion, {
+  foreignKey: "evaluador_id",
+  as: "calificacionesHechas",
+});
+
+Usuario.hasMany(Calificacion, {
+  foreignKey: "evaluado_id",
+  as: "calificacionesRecibidas",
+});
+
+Usuario.hasMany(Resena, {
+  foreignKey: "autor_id",
+  as: "resenasHechas",
+});
+
+Usuario.hasMany(Reporte, {
+  foreignKey: "reportante_id",
+  as: "reportes",
+});
 
 module.exports = {
   sequelize,
-  Usuario, VerificacionCorreo,
-  Conductor, Pasajero,
-  Viaje, ReglasViaje, Solicitud, Participacion,
-  Calificacion, Resena,
-  Reporte, AccionAdministrativa,
+  Usuario,
+  VerificacionCorreo,
+  Conductor,
+  Pasajero,
+  Viaje,
+  ReglasViaje,
+  Solicitud,
+  Participacion,
+  Calificacion,
+  Resena,
+  Reporte,
+  AccionAdministrativa,
+  RegistroPendiente,
 };

@@ -9,7 +9,12 @@ module.exports = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    usuarioId: { type: DataTypes.UUID, allowNull: false, unique: true },
+    usuario_id: { type: DataTypes.UUID, allowNull: false, unique: true },
   },
-  { tableName: "pasajeros" },
+  {
+    tableName: "pasajeros",
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: false,
+  },
 );

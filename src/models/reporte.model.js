@@ -9,9 +9,9 @@ module.exports = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    reportanteId: { type: DataTypes.UUID, allowNull: false },
-    reportadoId: { type: DataTypes.UUID, allowNull: false },
-    viajeId: { type: DataTypes.UUID, allowNull: false },
+    reportante_id: { type: DataTypes.UUID, allowNull: false },
+    reportado_id: { type: DataTypes.UUID, allowNull: false },
+    viaje_id: { type: DataTypes.UUID, allowNull: false },
     motivo: { type: DataTypes.TEXT, allowNull: false },
     evidencia: { type: DataTypes.STRING(255), allowNull: true },
     estado: {
@@ -19,5 +19,10 @@ module.exports = sequelize.define(
       defaultValue: "pendiente",
     },
   },
-  { tableName: "reportes" },
+  {
+    tableName: "reportes",
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+  },
 );

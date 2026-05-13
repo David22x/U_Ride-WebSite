@@ -26,10 +26,6 @@ async function connectDB() {
 
     console.log("Conexión establecida correctamente");
 
-    await sequelize.sync({
-      alter: process.env.NODE_ENV === "development",
-    });
-
     logger.info("Base de datos conectada correctamente");
   } catch (error) {
     console.error("Error conectando la base de datos:", error);
