@@ -585,3 +585,154 @@ select {
   .field-row { grid-template-columns: 1fr; }
   .otp-input { width: 44px !important; height: 52px; font-size: 1.3rem; }
 }
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #80adc9;
+}
+
+.bg-mesh,
+.bg-grid,
+.brand-panel,
+.step-indicator,
+.input-icon,
+.toggle-pass,
+.pass-strength {
+    display: none;
+}
+
+.auth-shell {
+    display: block;
+}
+
+.barra-registro {
+    height: 64px;
+    background: linear-gradient(to right, #9ed0f3, #149af2);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    position: relative;
+}
+
+.logo {
+    text-decoration: none;
+    color: black;
+    font-size: 36px;
+    font-weight: 900;
+}
+
+.titulo-registro {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #dceefa;
+    padding: 12px 35px;
+    border-radius: 28px;
+    color: #22384a;
+    font-weight: 800;
+}
+
+.contenedor-formulario {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tarjeta-formulario {
+    width: 390px;
+    background-color: #eaf3fa;
+    border-radius: 20px;
+    padding: 28px 60px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tarjeta-formulario form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tarjeta-formulario label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d1d1d;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.tarjeta-formulario input,
+.tarjeta-formulario select {
+    width: 190px;
+    height: 25px;
+    border: none;
+    border-radius: 14px;
+    background-color: #969696;
+    color: white;
+    padding: 0 12px;
+    outline: none;
+}
+
+.tarjeta-formulario select {
+    color: black;
+    background-color: #d7e8f7;
+}
+
+.field-error {
+    font-size: 11px;
+    color: #dc2626;
+    min-height: 10px;
+}
+
+.btn-primary {
+    width: 130px;
+    height: 30px;
+    border: none;
+    border-radius: 14px;
+    background-color: #cbe6fa;
+    color: black;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary:hover {
+    background-color: #b7daf2;
+}
+
+.form-footer {
+    margin-top: 12px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.form-footer a {
+    color: #1d4ed8;
+    text-decoration: none;
+}
+
+.otp-grid {
+    display: flex;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.otp-input {
+    width: 32px !important;
+    height: 35px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #d3eafa;
+    color: black;
+}
+
+.hidden {
+    display: none !important;
+}
