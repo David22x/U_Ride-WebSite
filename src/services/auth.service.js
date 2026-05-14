@@ -270,52 +270,64 @@ exports.enviarRecuperacion = async (correo) => {
   await emailService.enviarCodigoRecuperacion(correo, usuario.nombre, codigo);
 };
 
+exports.verificarCodigoRecuperacion = async (correo, codigo) => {
+  const { Op } = require("sequelize");
+  const { Usuario, VerificacionCorreo } = getModels();
+
+  const usuario = await Usuario.findOne({ where: { correo } });
+  if (!usuario) throw apiError("Código incorrecto o expirado.", 400);
+
+  const verif = await VerificacionCorreo.findOne({
+    where: {
+      usuarioId: usuario.id,
+      codigo,
+      tipo: "recuperacion",
+      usado: false,
+      expiraEn: { [Op.gt]: new Date() },
+    },
+  });
+
+  // Mismo mensaje genérico para no revelar información
+  if (!verif) throw apiError("Código incorrecto o expirado.", 400);
+
+  // No marcamos como usado todavía — se usa en el paso de cambio
+  return {
+    mensaje: "Código verificado. Ahora puedes ingresar tu nueva contraseña.",
+  };
+};
+
 /* ============================================================
    Cambiar contraseña
    ============================================================ */
 exports.cambiarContrasena = async (correo, codigo, nuevaContrasena) => {
-  const { Usuario, VerificacionCorreo } = models();
+  const { Op } = require("sequelize");
+  const { Usuario, VerificacionCorreo } = getModels();
 
-  const usuario = await Usuario.findOne({
-    where: { correo },
-  });
+  if (!nuevaContrasena || nuevaContrasena.length < 8)
+    throw apiError("La contraseña debe tener al menos 8 caracteres.", 400);
 
-  if (!usuario) {
-    throw apiError("Usuario no encontrado.", 404);
-  }
+  const usuario = await Usuario.findOne({ where: { correo } });
+  if (!usuario) throw apiError("Código incorrecto o expirado.", 400);
 
+  // Doble verificación: el código debe seguir vigente
   const verif = await VerificacionCorreo.findOne({
     where: {
-      usuario_id: usuario.id,
+      usuarioId: usuario.id,
       codigo,
       tipo: "recuperacion",
       usado: false,
-      expira_en: {
-        [Op.gt]: new Date(),
-      },
+      expiraEn: { [Op.gt]: new Date() },
     },
   });
 
-  if (!verif) {
-    throw apiError("Código incorrecto o expirado.", 400);
-  }
+  if (!verif) throw apiError("El código expiró. Solicita uno nuevo.", 400);
 
+  // Actualizar contraseña con hash
   const hash = await bcrypt.hash(nuevaContrasena, 12);
+  await usuario.update({ contrasena: hash }, { hooks: false });
 
-  await usuario.update(
-    {
-      contrasena: hash,
-    },
-    {
-      hooks: false,
-    },
-  );
+  // Marcar código como usado
+  await verif.update({ usado: true });
 
-  await verif.update({
-    usado: true,
-  });
-
-  return {
-    mensaje: "Contraseña actualizada correctamente.",
-  };
+  return { mensaje: "Contraseña actualizada correctamente." };
 };

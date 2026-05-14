@@ -59,7 +59,9 @@ router.post("/login", loginLimiter, validateLogin, c.login);
 
 router.post("/logout", c.logout);
 
-router.post("/recuperar-contrasena", c.recuperarContrasena);
+router.post("/recuperar-contrasena", registroLimiter, c.recuperarContrasena);
+
+router.post("/verificar-codigo-recuperacion", c.verificarCodigoRecuperacion);
 
 router.post("/cambiar-contrasena", c.cambiarContrasena);
 

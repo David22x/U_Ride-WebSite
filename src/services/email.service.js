@@ -77,16 +77,16 @@ exports.enviarCodigoRegistro = async (correo, nombre, codigo) => {
 exports.enviarCodigoRecuperacion = async (correo, nombre, codigo) => {
   const contenido = `
     <h2>Hola, ${nombre}</h2>
-    <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta en
-       <strong>U-Ride</strong>.</p>
-    <div class="code-box">
+    <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta
+       en <strong>U-Ride</strong>.</p>
+    <p>Ingresa el siguiente código en la plataforma:</p>
+    <div class="codeBox">
       <div class="code">${codigo}</div>
       <p class="expires">Este código expira en <strong>15 minutos</strong></p>
     </div>
-    <p>Si no solicitaste esto, simplemente ignora este correo y tu contraseña
-       seguirá siendo la misma.</p>
+    <p>Si no solicitaste esto, ignora este correo. Tu contraseña no cambiará.</p>
     <div class="note">
-      🔒 Nunca compartas este código con nadie.
+      🔒 Nunca compartas este código. U-Ride jamás te lo pedirá por otro medio.
     </div>
   `;
 

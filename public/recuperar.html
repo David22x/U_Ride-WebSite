@@ -1,11 +1,226 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>recuperacion</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>U-Ride — Recuperar contraseña</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/auth.css"/>
+  <link rel="stylesheet" href="/css/recuperar.css"/>
 </head>
 <body>
-    
+
+  <div class="bgMesh"></div>
+  <div class="bgGrid"></div>
+
+  <main class="authShell recShell">
+
+    <!-- ══ PASO 1: Ingresar correo ══════════════════════ -->
+    <div class="formCard" id="stepCorreo">
+      <a href="/login.html" class="backLink">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Volver al inicio de sesión
+      </a>
+
+      <div class="stepIcon">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <rect width="52" height="52" rx="15" fill="#EFF6FF"/>
+          <rect x="10" y="16" width="32" height="22" rx="4" stroke="#2563EB" stroke-width="2" fill="none"/>
+          <path d="M10 22l16 10 16-10" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <h2 class="formTitle">¿Olvidaste tu contraseña?</h2>
+      <p class="formSubtitle">
+        Ingresa tu correo institucional y te enviaremos un código
+        de 6 dígitos para restablecer tu contraseña.
+      </p>
+
+      <form id="formCorreo" novalidate>
+        <div class="fieldGroup">
+          <label for="correo">Correo institucional</label>
+          <div class="inputWithIcon">
+            <svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="4" width="20" height="16" rx="3"/>
+              <path d="M2 8l10 6 10-6"/>
+            </svg>
+            <input
+              type="email"
+              id="correo"
+              name="correo"
+              placeholder="nombre@uta.edu.ec"
+              autocomplete="email"
+            />
+          </div>
+          <span class="fieldError" id="errCorreo"></span>
+        </div>
+
+        <div class="alert" id="alertCorreo" role="alert" aria-live="polite"></div>
+
+        <button type="submit" class="btnPrimary" id="btnEnviar">
+          <span class="btnText">Enviar código</span>
+          <span class="btnSpinner" hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" class="spin">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31" stroke-dashoffset="10"/>
+            </svg>
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- ══ PASO 2: Verificar código OTP ════════════════ -->
+    <div class="formCard hidden" id="stepCodigo">
+      <div class="stepIndicator">
+        <span class="step done">✓</span>
+        <span class="stepLine filled"></span>
+        <span class="step active">2</span>
+        <span class="stepLine"></span>
+        <span class="step">3</span>
+      </div>
+
+      <div class="stepIcon">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <rect width="52" height="52" rx="15" fill="#EFF6FF"/>
+          <rect x="10" y="16" width="32" height="22" rx="4" stroke="#2563EB" stroke-width="2" fill="none"/>
+          <path d="M10 22l16 10 16-10" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="39" cy="13" r="7" fill="#2563EB"/>
+          <text x="39" y="17" text-anchor="middle" fill="white" font-size="9" font-weight="bold">6</text>
+        </svg>
+      </div>
+
+      <h2 class="formTitle">Revisa tu correo</h2>
+      <p class="formSubtitle">
+        Enviamos un código de 6 dígitos a<br/>
+        <strong id="correoDisplay">—</strong>
+      </p>
+
+      <div class="otpGrid" id="otpGrid">
+        <input class="otpInput" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 1"/>
+        <input class="otpInput" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 2"/>
+        <input class="otpInput" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 3"/>
+        <span class="otpSep">—</span>
+        <input class="otpInput" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 4"/>
+        <input class="otpInput" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 5"/>
+        <input class="otpInput" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Dígito 6"/>
+      </div>
+
+      <div class="alert" id="alertCodigo" role="alert" aria-live="polite"></div>
+
+      <button type="button" class="btnPrimary" id="btnVerificar">
+        <span class="btnText">Verificar código</span>
+        <span class="btnSpinner" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" class="spin">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31" stroke-dashoffset="10"/>
+          </svg>
+        </span>
+      </button>
+
+      <div class="resendRow">
+        <span id="timerText">Reenviar código en <strong id="countdown">15:00</strong></span>
+        <button type="button" class="btnLink hidden" id="btnReenviar">Reenviar código</button>
+      </div>
+
+      <button type="button" class="btnGhost" id="btnCambiarCorreo">← Cambiar correo</button>
+    </div>
+
+    <!-- ══ PASO 3: Nueva contraseña ════════════════════ -->
+    <div class="formCard hidden" id="stepNuevaPass">
+      <div class="stepIndicator">
+        <span class="step done">✓</span>
+        <span class="stepLine filled"></span>
+        <span class="step done">✓</span>
+        <span class="stepLine filled"></span>
+        <span class="step active">3</span>
+      </div>
+
+      <div class="stepIcon">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <rect width="52" height="52" rx="15" fill="#EFF6FF"/>
+          <rect x="13" y="23" width="26" height="16" rx="3" stroke="#2563EB" stroke-width="2" fill="none"/>
+          <path d="M17 23v-5a9 9 0 0 1 18 0v5" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="26" cy="31" r="2.5" fill="#2563EB"/>
+        </svg>
+      </div>
+
+      <h2 class="formTitle">Nueva contraseña</h2>
+      <p class="formSubtitle">Elige una contraseña segura para tu cuenta.</p>
+
+      <form id="formNuevaPass" novalidate>
+        <div class="fieldGroup">
+          <label for="nuevaPass">Nueva contraseña</label>
+          <div class="inputWithIcon">
+            <svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" id="nuevaPass" placeholder="Mínimo 8 caracteres"/>
+            <button type="button" class="togglePass" data-target="nuevaPass" aria-label="Mostrar contraseña">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <!-- Medidor de fortaleza -->
+          <div class="passStrength">
+            <div class="bar" id="bar1"></div>
+            <div class="bar" id="bar2"></div>
+            <div class="bar" id="bar3"></div>
+            <div class="bar" id="bar4"></div>
+            <span id="passLabel">Ingresa una contraseña</span>
+          </div>
+          <span class="fieldError" id="errNuevaPass"></span>
+        </div>
+
+        <div class="fieldGroup">
+          <label for="confirmarPass">Confirmar contraseña</label>
+          <div class="inputWithIcon">
+            <svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M9 12l2 2 4-4"/>
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" id="confirmarPass" placeholder="Repite tu contraseña"/>
+            <button type="button" class="togglePass" data-target="confirmarPass" aria-label="Mostrar contraseña">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <span class="fieldError" id="errConfirmar"></span>
+        </div>
+
+        <div class="alert" id="alertNuevaPass" role="alert" aria-live="polite"></div>
+
+        <button type="submit" class="btnPrimary" id="btnCambiar">
+          <span class="btnText">Cambiar contraseña</span>
+          <span class="btnSpinner" hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" class="spin">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31" stroke-dashoffset="10"/>
+            </svg>
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- ══ PASO 4: Éxito ═══════════════════════════════ -->
+    <div class="formCard hidden" id="stepExito">
+      <div class="successAnim">
+        <svg class="checkmark" viewBox="0 0 52 52">
+          <circle class="checkmarkCircle" cx="26" cy="26" r="25" fill="none"/>
+          <path class="checkmarkCheck" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+      </div>
+
+      <h2 class="formTitle">¡Contraseña actualizada!</h2>
+      <p class="formSubtitle">
+        Tu contraseña fue cambiada correctamente.<br/>
+        Ya puedes iniciar sesión con tu nueva contraseña.
+      </p>
+
+      <a href="/login.html" class="btnPrimary" style="display:flex;justify-content:center;text-decoration:none;margin-top:1.5rem">
+        Ir a iniciar sesión →
+      </a>
+    </div>
+
+  </main>
+
+  <script src="/js/recuperar.js"></script>
 </body>
 </html>

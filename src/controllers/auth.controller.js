@@ -118,11 +118,29 @@ exports.logout = (_req, res) => {
    ============================================================ */
 exports.recuperarContrasena = async (req, res, next) => {
   try {
-    await authService.enviarRecuperacion(req.body.correo);
-
+    const { correo } = req.body;
+    if (!correo)
+      return res.status(400).json({ error: "El correo es requerido." });
+    await authService.enviarRecuperacion(correo.trim().toLowerCase());
+    // Siempre 200 para no revelar si el correo existe
     res.json({
-      mensaje: "Si el correo existe recibirás un código en breve.",
+      mensaje: "Si el correo está registrado, recibirás un código en breve.",
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.verificarCodigoRecuperacion = async (req, res, next) => {
+  try {
+    const { correo, codigo } = req.body;
+    if (!correo || !codigo)
+      return res.status(400).json({ error: "Correo y código son requeridos." });
+    const result = await authService.verificarCodigoRecuperacion(
+      correo.trim().toLowerCase(),
+      codigo.trim(),
+    );
+    res.json(result);
   } catch (err) {
     next(err);
   }
@@ -134,19 +152,15 @@ exports.recuperarContrasena = async (req, res, next) => {
 exports.cambiarContrasena = async (req, res, next) => {
   try {
     const { correo, codigo, nuevaContrasena } = req.body;
-
-    if (!correo || !codigo || !nuevaContrasena) {
-      return res.status(400).json({
-        error: "Todos los campos son requeridos.",
-      });
-    }
-
+    if (!correo || !codigo || !nuevaContrasena)
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son requeridos." });
     const result = await authService.cambiarContrasena(
-      correo,
-      codigo,
+      correo.trim().toLowerCase(),
+      codigo.trim(),
       nuevaContrasena,
     );
-
     res.json(result);
   } catch (err) {
     next(err);
