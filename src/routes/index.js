@@ -3,6 +3,7 @@ const router = Router();
 
 router.use("/auth", require("./auth.routes"));
 router.use("/usuarios", require("./usuario.routes"));
+router.use("/conductores", require("./conductor.routes"));
 router.use("/viajes", require("./viaje.routes"));
 router.use("/solicitudes", require("./solicitud.routes"));
 router.use("/calificaciones", require("./calificacion.routes"));

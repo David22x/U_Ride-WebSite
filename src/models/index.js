@@ -14,26 +14,31 @@ const Reporte = require("./reporte.model");
 const AccionAdministrativa = require("./accionAdministrativa.model");
 const RegistroPendiente = require("./registroPendiente.model");
 
-// ── Relaciones ────────────────────────────────────────
+/* ── Relaciones ───────────────────────────────────── */
 
+/* Usuario ↔ Conductor */
 Usuario.hasOne(Conductor, {
   foreignKey: "usuario_id",
-  as: "conductor",
-});
-
-Usuario.hasOne(Pasajero, {
-  foreignKey: "usuario_id",
-  as: "pasajero",
+  as: "perfilConductor",
 });
 
 Conductor.belongsTo(Usuario, {
   foreignKey: "usuario_id",
+  as: "usuario",
+});
+
+/* Usuario ↔ Pasajero */
+Usuario.hasOne(Pasajero, {
+  foreignKey: "usuario_id",
+  as: "perfilPasajero",
 });
 
 Pasajero.belongsTo(Usuario, {
   foreignKey: "usuario_id",
+  as: "usuario",
 });
 
+/* Conductor ↔ Viaje */
 Conductor.hasMany(Viaje, {
   foreignKey: "conductor_id",
   as: "viajes",
@@ -44,21 +49,29 @@ Viaje.belongsTo(Conductor, {
   as: "conductor",
 });
 
+/* Viaje ↔ Reglas */
 Viaje.hasOne(ReglasViaje, {
   foreignKey: "viaje_id",
   as: "reglas",
 });
 
+ReglasViaje.belongsTo(Viaje, {
+  foreignKey: "viaje_id",
+  as: "viaje",
+});
+
+/* Viaje ↔ Solicitudes */
 Viaje.hasMany(Solicitud, {
   foreignKey: "viaje_id",
   as: "solicitudes",
 });
 
-Viaje.hasMany(Participacion, {
+Solicitud.belongsTo(Viaje, {
   foreignKey: "viaje_id",
-  as: "participantes",
+  as: "viaje",
 });
 
+/* Pasajero ↔ Solicitudes */
 Pasajero.hasMany(Solicitud, {
   foreignKey: "pasajero_id",
   as: "solicitudes",
@@ -69,11 +82,18 @@ Solicitud.belongsTo(Pasajero, {
   as: "pasajero",
 });
 
-Solicitud.belongsTo(Viaje, {
+/* Viaje ↔ Participaciones */
+Viaje.hasMany(Participacion, {
+  foreignKey: "viaje_id",
+  as: "participantes",
+});
+
+Participacion.belongsTo(Viaje, {
   foreignKey: "viaje_id",
   as: "viaje",
 });
 
+/* Usuario ↔ Calificaciones */
 Usuario.hasMany(Calificacion, {
   foreignKey: "evaluador_id",
   as: "calificacionesHechas",
@@ -84,15 +104,50 @@ Usuario.hasMany(Calificacion, {
   as: "calificacionesRecibidas",
 });
 
+Calificacion.belongsTo(Usuario, {
+  foreignKey: "evaluador_id",
+  as: "evaluador",
+});
+
+Calificacion.belongsTo(Usuario, {
+  foreignKey: "evaluado_id",
+  as: "evaluado",
+});
+
+/* Usuario ↔ Reseñas */
 Usuario.hasMany(Resena, {
   foreignKey: "autor_id",
   as: "resenasHechas",
 });
 
+Resena.belongsTo(Usuario, {
+  foreignKey: "autor_id",
+  as: "autor",
+});
+
+/* Usuario ↔ Reportes */
 Usuario.hasMany(Reporte, {
   foreignKey: "reportante_id",
-  as: "reportes",
+  as: "reportesHechos",
 });
+
+Reporte.belongsTo(Usuario, {
+  foreignKey: "reportante_id",
+  as: "reportante",
+});
+
+/* Usuario ↔ Verificaciones */
+Usuario.hasMany(VerificacionCorreo, {
+  foreignKey: "usuario_id",
+  as: "verificaciones",
+});
+
+VerificacionCorreo.belongsTo(Usuario, {
+  foreignKey: "usuario_id",
+  as: "usuario",
+});
+
+/* ── Exportar modelos ───────────────────────────────── */
 
 module.exports = {
   sequelize,

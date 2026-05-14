@@ -1,15 +1,40 @@
+const { Viaje, Calificacion } = require("../models");
+const { fn, col } = require("sequelize");
 const { Usuario } = require("../models");
 
-exports.obtenerPerfil = async (id) => {
-  const u = await Usuario.findByPk(id, {
-    attributes: { exclude: ["contrasena"] },
-  });
-  if (!u) throw new Error("Usuario no encontrado.");
-  return u;
+exports.actualizar = async (id, datos) => {
+  const usuario = await Usuario.findByPk(id);
+
+  if (!usuario) {
+    throw new Error("Usuario no encontrado");
+  }
+
+  await usuario.update(datos);
+
+  return usuario;
 };
 
-exports.actualizarPerfil = async (id, datos) => {
-  const u = await Usuario.findByPk(id);
-  if (!u) throw new Error("Usuario no encontrado.");
-  return u.update(datos);
+exports.obtenerStats = async (usuarioId) => {
+  /* Total viajes */
+  const totalViajes = await Viaje.count({
+    where: {
+      conductor_id: usuarioId,
+    },
+  });
+
+  /* Promedio calificaciones */
+  const promedio = await Calificacion.findOne({
+    attributes: [[fn("AVG", col("puntuacion")), "promedio"]],
+    where: {
+      evaluado_id: usuarioId,
+    },
+    raw: true,
+  });
+
+  return {
+    total_viajes: totalViajes,
+    promedio: promedio?.promedio
+      ? parseFloat(promedio.promedio).toFixed(1)
+      : null,
+  };
 };
