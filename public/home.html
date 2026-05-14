@@ -11,53 +11,28 @@
 <body>
 
   <!-- ══════════════════════════════════════════
-       SIDEBAR
+       SIDEBAR (Oculto por nuevo diseño estético)
   ══════════════════════════════════════════ -->
-  <aside class="sidebar" id="sidebar">
+  <aside class="sidebar" id="sidebar" style="display:none;">
     <div class="sidebarTop">
       <div class="logo">
-        <svg width="34" height="34" viewBox="0 0 48 48" fill="none">
-          <rect width="48" height="48" rx="13" fill="#2563EB"/>
-          <path d="M10 32 Q24 14 38 32" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-          <circle cx="24" cy="19" r="4" fill="white"/>
-        </svg>
         <span class="logoTxt">U-Ride</span>
       </div>
-
       <nav class="nav">
-        <a href="#" class="navItem active" data-view="inicio">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Inicio
-        </a>
-        <a href="#" class="navItem" data-view="buscar">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Buscar viaje
-        </a>
-        <a href="#" class="navItem" data-view="misViajes">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Mis viajes
-        </a>
-        <a href="#" class="navItem" id="navCrear">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-          Crear viaje
-        </a>
-        <a href="#" class="navItem" data-view="perfil">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Mi perfil
-        </a>
+        <a href="#" class="navItem active" data-view="inicio">Inicio</a>
+        <a href="#" class="navItem" data-view="buscar">Buscar viaje</a>
+        <a href="#" class="navItem" data-view="misViajes">Mis viajes</a>
+        <a href="#" class="navItem" id="navCrearSidebar">Crear viaje</a>
+        <a href="#" class="navItem" data-view="perfil">Mi perfil</a>
       </nav>
     </div>
-
-    <!-- Usuario -->
     <div class="sidebarUser">
       <div class="userAvatar" id="userAvatar">D</div>
       <div class="userInfo">
         <span class="userName" id="userName">Cargando…</span>
         <span class="userRole" id="userRole">Estudiante</span>
       </div>
-      <button class="btnLogout" id="btnLogout" title="Cerrar sesión">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      </button>
+      <button class="btnLogout" id="btnLogout" title="Cerrar sesión">Salir</button>
     </div>
   </aside>
 
@@ -68,25 +43,43 @@
 
     <!-- Top bar -->
     <header class="topbar">
-      <button class="sidebarToggle" id="sidebarToggle" aria-label="Menú">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-      <div class="topbarSearch">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <div class="logoTop" data-view="inicio" style="cursor:pointer">
+        <span class="logoTxtTop">U-RIDE</span>
+        <div class="logoUnderline"></div>
+      </div>
+      <nav class="navTop">
+        <a href="#" class="navTopItem" data-view="buscar">Buscar</a>
+        <a href="#" class="navTopItem" data-view="misViajes">Mis viajes</a>
+        <a href="#" class="navTopItem" id="navCrear">Crear viaje</a>
+      </nav>
+
+      <div class="topbarSearch" style="display:none;">
         <input type="text" id="searchInput" placeholder="Buscar por zona o ruta…"/>
       </div>
+
       <div class="topbarRight">
-        <!-- ★ Botón de cambio de rol en topbar -->
-        <button class="rolSwitchBtn" id="rolSwitchBtn" aria-label="Cambiar rol" title="Cambiar a modo conductor">
-          <span class="rolSwitchIcon">
-            <!-- Icono pasajero -->
-            <svg class="iconPasajero" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <!-- Icono conductor -->
-            <svg class="iconConductor" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          </span>
-          <span class="rolSwitchLabel" id="rolSwitchLabel">Pasajero</span>
-          <svg class="rolSwitchArrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
+        <!-- Profile Icon mapped to My Profile -->
+        <div class="profileBtnTop" data-view="perfil" id="profileBtnTop">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+
+        <!-- ★ Botón de cambio de rol en topbar custom -->
+        <div class="rolToggleWrap" id="rolSwitchBtn" aria-label="Cambiar rol">
+          <div class="rolToggleKnob" id="rolToggleKnob"></div>
+          <div class="rolToggleTrack"></div>
+          <!-- Hidden original structure so JS doesn't break -->
+          <div style="display:none;">
+            <span class="rolSwitchIcon">
+              <svg class="iconPasajero"></svg>
+              <svg class="iconConductor"></svg>
+            </span>
+            <span class="rolSwitchLabel" id="rolSwitchLabel">Pasajero</span>
+          </div>
+        </div>
+
         <!-- Dropdown del rol -->
         <div class="rolDropdown hidden" id="rolDropdown">
           <button class="rolOption active" id="optPasajero" data-rol="pasajero">
@@ -98,8 +91,9 @@
             Conductor
           </button>
         </div>
-        <!-- Notificaciones -->
-        <button class="notifBtn" id="notifBtn" aria-label="Notificaciones">
+
+        <!-- Notificaciones (oculto por diseño estético) -->
+        <button class="notifBtn" id="notifBtn" aria-label="Notificaciones" style="display:none;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           <span class="notifBadge hidden" id="notifBadge">0</span>
         </button>
@@ -121,7 +115,7 @@
     <main class="view active" id="viewInicio">
 
       <!-- Saludo -->
-      <section class="greeting">
+      <section class="greeting" style="display:none;">
         <div>
           <h1 class="greetingTitle" id="greetingMsg">Buenos días 👋</h1>
           <p class="greetingSub">¿Qué necesitas hoy?</p>
@@ -139,7 +133,7 @@
       </section>
 
       <!-- Banner de modo activo -->
-      <div class="modeBanner" id="modeBanner">
+      <div class="modeBanner" id="modeBanner" style="display:none;">
         <span class="modeBannerIcon" id="modeBannerIcon">🧍</span>
         <div>
           <strong id="modeBannerTitle">Modo Pasajero activo</strong>
@@ -147,41 +141,29 @@
         </div>
       </div>
 
-      <!-- Acciones rápidas -->
-      <section class="quickActions">
+      <!-- Acciones rápidas (Ocultas, movidas a la navegación superior) -->
+      <section class="quickActions" style="display:none;">
         <button class="qaCard qaBuscar" data-view="buscar">
-          <div class="qaIcon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </div>
+          <div class="qaIcon"></div>
           <span class="qaTitle">Buscar viaje</span>
-          <span class="qaSub">Encuentra un cupo</span>
         </button>
         <button class="qaCard qaCrear" id="qaCrear">
-          <div class="qaIcon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
-          </div>
+          <div class="qaIcon"></div>
           <span class="qaTitle">Publicar viaje</span>
-          <span class="qaSub">Ofrecer cupos</span>
         </button>
         <button class="qaCard qaHistorial" data-view="misViajes">
-          <div class="qaIcon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v10l4 4"/><circle cx="12" cy="12" r="10"/></svg>
-          </div>
+          <div class="qaIcon"></div>
           <span class="qaTitle">Mis viajes</span>
-          <span class="qaSub">Historial</span>
         </button>
         <button class="qaCard qaPerfil" data-view="perfil">
-          <div class="qaIcon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
+          <div class="qaIcon"></div>
           <span class="qaTitle">Mi perfil</span>
-          <span class="qaSub">Editar datos</span>
         </button>
       </section>
 
       <!-- Viajes disponibles -->
       <section class="sectionBlock">
-        <div class="sectionHead">
+        <div class="sectionHead" style="display:none;">
           <h2 class="sectionTitle">Viajes disponibles</h2>
           <a href="#" class="sectionLink" data-view="buscar">Ver todos →</a>
         </div>
