@@ -9,8 +9,6 @@ body {
     background-color: #80adc9;
 }
 
-/* -------- PÁGINA DE INICIO -------- */
-
 .navbar {
     height: 64px;
     background-color: #d7eafa;
@@ -42,6 +40,10 @@ body {
     display: flex;
     align-items: center;
     gap: 18px;
+}
+
+.btn-login {
+    padding: 8px 12px;
 }
 
 .btn-registro {
@@ -125,110 +127,6 @@ body {
 }
 
 .carro {
-    font-size: 60px;
+    font-size: 55px;
     margin-top: 20px;
-}
-
-/* -------- PÁGINA CREAR CUENTA -------- */
-
-.barra-registro {
-    height: 64px;
-    background: linear-gradient(to right, #9ed0f3, #149af2);
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    position: relative;
-}
-
-.logo {
-    text-decoration: none;
-    color: black;
-    font-size: 36px;
-    font-weight: 900;
-}
-
-.titulo-registro {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #dceefa;
-    padding: 12px 35px;
-    border-radius: 28px;
-    color: #22384a;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-}
-
-.contenedor-formulario {
-    height: calc(100vh - 64px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.tarjeta-formulario {
-    width: 390px;
-    background-color: #eaf3fa;
-    border-radius: 20px;
-    padding: 28px 60px 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.tarjeta-formulario label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1d1d1d;
-    margin-top: 12px;
-    margin-bottom: 6px;
-    letter-spacing: 0.3px;
-}
-
-.tarjeta-formulario input {
-    width: 170px;
-    height: 23px;
-    border: none;
-    border-radius: 14px;
-    background-color: #969696;
-    color: white;
-    padding: 0 12px;
-    outline: none;
-}
-
-.tarjeta-formulario input:focus {
-    background-color: #7f7f7f;
-}
-
-.codigo {
-    width: 120px;
-    height: 22px;
-    background-color: #d3eafa;
-    border-radius: 15px;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.codigo span {
-    width: 11px;
-    height: 11px;
-    background-color: #6f8df0;
-    border-radius: 50%;
-}
-
-button {
-    width: 130px;
-    height: 28px;
-    border: none;
-    border-radius: 14px;
-    background-color: #cbe6fa;
-    font-size: 18px;
-    font-weight: 800;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #b7daf2;
 }
