@@ -230,21 +230,18 @@ function renderViajes(container, viajes) {
       return `
     <article class="viajeCard" data-id="${v.id}">
       <div class="vcRuta">
-        <span>${v.origen}</span>
-        <span class="vcArrow">→</span>
-        <span>${v.destino}</span>
+        <span>Viaje ${v.origen}-${v.destino}</span>
       </div>
       <div class="vcMeta">
-        <span class="vcChip">📅 ${formatearFecha(v.fecha)}</span>
-        <span class="vcChip">🕐 ${v.horaSalida?.slice(0, 5)}</span>
+        <span class="vcChip">Hora: ${v.horaSalida?.slice(0, 5)} - ${v.horaLlegada?.slice(0, 5) || "??:??"}</span>
       </div>
       <div class="vcFooter">
         <div class="vcConductor">
           <div class="vcAv">${inicial}</div>
-          ${v.conductorNombre || "Conductor"}
+          Conductor: ${v.conductorNombre || "Desconocido"}
         </div>
         <span class="vcCupos ${cuposCls}">
-          ${v.cuposDisponibles === 0 ? "Sin cupos" : `${v.cuposDisponibles} cupo${v.cuposDisponibles !== 1 ? "s" : ""}`}
+          Asientos disponibles: ${v.cuposDisponibles}
         </span>
       </div>
     </article>`;
