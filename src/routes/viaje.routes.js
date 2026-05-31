@@ -1,12 +1,23 @@
 const { Router } = require("express");
-const router = Router();
-const viajeController = require("../controllers/viaje.controller");
-const { autenticar, esConductor } = require("../middlewares/auth.middleware");
+const vRouter = Router();
+const vc = require("../controllers/viaje.controller");
+const { autenticar } = require("../middlewares/auth.middleware");
 
-router.get("/", autenticar, viajeController.listar);
-router.post("/", autenticar, esConductor, viajeController.crear);
-router.get("/:id", autenticar, viajeController.obtener);
-router.put("/:id", autenticar, esConductor, viajeController.actualizar);
-router.delete("/:id", autenticar, esConductor, viajeController.cancelar);
+vRouter.use(autenticar);
 
-module.exports = router;
+// Viajes
+vRouter.get("/", vc.buscarViajes); // RF4
+vRouter.post("/", vc.crearViaje); // RF3
+vRouter.get("/mis-viajes", vc.misViajes); // RF3
+vRouter.get("/:id", vc.obtenerViaje); // RF3 + RF9 (incluye reglas)
+vRouter.patch("/:id", vc.modificarViaje); // RF3
+vRouter.delete("/:id", vc.cancelarViaje); // RF3
+
+// Solicitudes
+vRouter.get("/solicitudes/pendientes", vc.solicitudesPend); // RF6
+vRouter.post("/solicitudes", vc.enviarSolicitud); // RF5
+vRouter.patch("/solicitudes/:id/cancelar", vc.cancelarSolicitud); // RF5
+vRouter.patch("/solicitudes/:id/aceptar", vc.aceptarSolicitud); // RF6 + RF7
+vRouter.patch("/solicitudes/:id/rechazar", vc.rechazarSolicitud); // RF6
+
+module.exports = vRouter;

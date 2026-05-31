@@ -9,9 +9,21 @@ module.exports = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    reportante_id: { type: DataTypes.UUID, allowNull: false },
-    reportado_id: { type: DataTypes.UUID, allowNull: false },
-    viaje_id: { type: DataTypes.UUID, allowNull: false },
+    reportanteId: {
+      type: DataTypes.UUID,
+      field: "reportante_id",
+      allowNull: false,
+    },
+    reportadoId: {
+      type: DataTypes.UUID,
+      field: "reportado_id",
+      allowNull: false,
+    },
+    viajeId: {
+      type: DataTypes.UUID,
+      field: "viaje_id",
+      allowNull: false,
+    },
     motivo: { type: DataTypes.TEXT, allowNull: false },
     evidencia: { type: DataTypes.STRING(255), allowNull: true },
     estado: {

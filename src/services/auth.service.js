@@ -52,9 +52,7 @@ exports.iniciarRegistro = async ({
 
   const { Usuario, RegistroPendiente } = models();
 
-  const existe = await Usuario.findOne({
-    where: { correo },
-  });
+  const existe = await Usuario.findOne({ where: { correo } });
 
   if (existe) {
     throw apiError("Este correo ya tiene una cuenta activa.", 409);
@@ -66,7 +64,6 @@ exports.iniciarRegistro = async ({
   );
 
   const hash = await bcrypt.hash(contrasena, 12);
-
   const codigo = genCodigo();
   const expira = calcExpiracion();
 
@@ -74,35 +71,31 @@ exports.iniciarRegistro = async ({
     correo,
     nombre,
     apellido,
-    contrasena_hash: hash,
+    contrasenaHash: hash,
     carrera: carrera || null,
     zona: zona || null,
     codigo,
-    expira_en: expira,
+    expiraEn: expira,
     usado: false,
   });
 
   await emailService.enviarCodigoRegistro(correo, nombre, codigo);
 
-  return {
-    mensaje: "Código enviado. Revisa tu correo.",
-  };
+  return { mensaje: "Código enviado. Revisa tu correo." };
 };
 
 /* ============================================================
    PASO 2 — Verificar código
    ============================================================ */
 exports.verificarCodigo = async (correo, codigo) => {
-  const { Usuario, RegistroPendiente } = models();
+  const { Usuario, RegistroPendiente, Pasajero } = models();
 
   const pendiente = await RegistroPendiente.findOne({
     where: {
       correo,
       codigo,
       usado: false,
-      expira_en: {
-        [Op.gt]: new Date(),
-      },
+      expiraEn: { [Op.gt]: new Date() },
     },
   });
 
@@ -110,13 +103,10 @@ exports.verificarCodigo = async (correo, codigo) => {
     throw apiError("Código incorrecto o expirado.", 400);
   }
 
-  const yaExiste = await Usuario.findOne({
-    where: { correo },
-  });
+  const yaExiste = await Usuario.findOne({ where: { correo } });
 
   if (yaExiste) {
     await pendiente.update({ usado: true });
-
     throw apiError("Este correo ya tiene una cuenta activa.", 409);
   }
 
@@ -125,20 +115,18 @@ exports.verificarCodigo = async (correo, codigo) => {
       nombre: pendiente.nombre,
       apellido: pendiente.apellido,
       correo: pendiente.correo,
-      contrasena: pendiente.contrasena_hash,
+      contrasena: pendiente.contrasenaHash,
       carrera: pendiente.carrera,
       zona: pendiente.zona,
       verificado: true,
       estado: "activo",
     },
-    {
-      hooks: false,
-    },
+    { hooks: false },
   );
 
-  await pendiente.update({
-    usado: true,
-  });
+  await Pasajero.create({ usuarioId: usuario.id });
+
+  await pendiente.update({ usado: true });
 
   return {
     usuarioId: usuario.id,
@@ -153,18 +141,13 @@ exports.reenviarCodigo = async (correo) => {
   const { RegistroPendiente } = models();
 
   const pendiente = await RegistroPendiente.findOne({
-    where: {
-      correo,
-      usado: false,
-    },
+    where: { correo, usado: false },
     order: [["created_at", "DESC"]],
   });
 
   if (!pendiente) return;
 
-  await pendiente.update({
-    usado: true,
-  });
+  await pendiente.update({ usado: true });
 
   const codigo = genCodigo();
 
@@ -172,11 +155,11 @@ exports.reenviarCodigo = async (correo) => {
     correo,
     nombre: pendiente.nombre,
     apellido: pendiente.apellido,
-    contrasena_hash: pendiente.contrasena_hash,
+    contrasenaHash: pendiente.contrasenaHash,
     carrera: pendiente.carrera,
     zona: pendiente.zona,
     codigo,
-    expira_en: calcExpiracion(),
+    expiraEn: calcExpiracion(),
     usado: false,
   });
 
@@ -191,9 +174,7 @@ exports.login = async (correo, contrasena) => {
 
   const errGen = apiError("Correo o contraseña incorrectos.", 401);
 
-  const usuario = await Usuario.findOne({
-    where: { correo },
-  });
+  const usuario = await Usuario.findOne({ where: { correo } });
 
   if (!usuario) throw errGen;
 
@@ -213,10 +194,7 @@ exports.login = async (correo, contrasena) => {
     throw apiError("Tu cuenta está inactiva.", 403);
   }
 
-  const token = signToken({
-    id: usuario.id,
-    rol: usuario.rol,
-  });
+  const token = signToken({ id: usuario.id, rol: usuario.rol });
 
   return {
     token,
@@ -238,10 +216,7 @@ exports.enviarRecuperacion = async (correo) => {
   const { Usuario, VerificacionCorreo } = models();
 
   const usuario = await Usuario.findOne({
-    where: {
-      correo,
-      verificado: true,
-    },
+    where: { correo, verificado: true },
   });
 
   if (!usuario) return;
@@ -250,7 +225,7 @@ exports.enviarRecuperacion = async (correo) => {
     { usado: true },
     {
       where: {
-        usuario_id: usuario.id,
+        usuarioId: usuario.id,
         tipo: "recuperacion",
         usado: false,
       },
@@ -260,10 +235,10 @@ exports.enviarRecuperacion = async (correo) => {
   const codigo = genCodigo();
 
   await VerificacionCorreo.create({
-    usuario_id: usuario.id,
+    usuarioId: usuario.id,
     codigo,
     tipo: "recuperacion",
-    expira_en: calcExpiracion(15),
+    expiraEn: calcExpiracion(15),
     usado: false,
   });
 
@@ -272,7 +247,7 @@ exports.enviarRecuperacion = async (correo) => {
 
 exports.verificarCodigoRecuperacion = async (correo, codigo) => {
   const { Op } = require("sequelize");
-  const { Usuario, VerificacionCorreo } = getModels();
+  const { Usuario, VerificacionCorreo } = models();
 
   const usuario = await Usuario.findOne({ where: { correo } });
   if (!usuario) throw apiError("Código incorrecto o expirado.", 400);
@@ -287,10 +262,8 @@ exports.verificarCodigoRecuperacion = async (correo, codigo) => {
     },
   });
 
-  // Mismo mensaje genérico para no revelar información
   if (!verif) throw apiError("Código incorrecto o expirado.", 400);
 
-  // No marcamos como usado todavía — se usa en el paso de cambio
   return {
     mensaje: "Código verificado. Ahora puedes ingresar tu nueva contraseña.",
   };
@@ -301,7 +274,7 @@ exports.verificarCodigoRecuperacion = async (correo, codigo) => {
    ============================================================ */
 exports.cambiarContrasena = async (correo, codigo, nuevaContrasena) => {
   const { Op } = require("sequelize");
-  const { Usuario, VerificacionCorreo } = getModels();
+  const { Usuario, VerificacionCorreo } = models();
 
   if (!nuevaContrasena || nuevaContrasena.length < 8)
     throw apiError("La contraseña debe tener al menos 8 caracteres.", 400);
@@ -309,7 +282,6 @@ exports.cambiarContrasena = async (correo, codigo, nuevaContrasena) => {
   const usuario = await Usuario.findOne({ where: { correo } });
   if (!usuario) throw apiError("Código incorrecto o expirado.", 400);
 
-  // Doble verificación: el código debe seguir vigente
   const verif = await VerificacionCorreo.findOne({
     where: {
       usuarioId: usuario.id,
@@ -322,11 +294,8 @@ exports.cambiarContrasena = async (correo, codigo, nuevaContrasena) => {
 
   if (!verif) throw apiError("El código expiró. Solicita uno nuevo.", 400);
 
-  // Actualizar contraseña con hash
   const hash = await bcrypt.hash(nuevaContrasena, 12);
   await usuario.update({ contrasena: hash }, { hooks: false });
-
-  // Marcar código como usado
   await verif.update({ usado: true });
 
   return { mensaje: "Contraseña actualizada correctamente." };

@@ -1,7 +1,10 @@
 const { Router } = require("express");
 const router = Router();
+
 const c = require("../controllers/solicitud.controller");
 const { autenticar } = require("../middlewares/auth.middleware");
+
+router.get("/pendientes", autenticar, c.pendientes);
 
 router.post("/", autenticar, c.crear);
 router.patch("/:id/aceptar", autenticar, c.aceptar);

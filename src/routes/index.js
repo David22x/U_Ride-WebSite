@@ -1,13 +1,13 @@
 const { Router } = require("express");
-const router = Router();
+const mainRouter = Router();
 
-router.use("/auth", require("./auth.routes"));
-router.use("/usuarios", require("./usuario.routes"));
-router.use("/conductores", require("./conductor.routes"));
-router.use("/viajes", require("./viaje.routes"));
-router.use("/solicitudes", require("./solicitud.routes"));
-router.use("/calificaciones", require("./calificacion.routes"));
-router.use("/reportes", require("./reporte.routes"));
-router.use("/admin", require("./admin.routes"));
+mainRouter.use("/auth", require("./auth.routes"));
+mainRouter.use("/usuarios", require("./usuario.routes"));
+mainRouter.use("/viajes", require("./viaje.routes"));
+mainRouter.use("/calificaciones", require("./calificacion.routes"));
+mainRouter.use("/reportes", require("./reporte.routes"));
+mainRouter.use("/admin", require("./admin.routes"));
+mainRouter.use("/conductores", require("./conductor.routes"));
+mainRouter.use("/solicitudes", require("./solicitud.routes"));
 
-module.exports = router;
+module.exports = mainRouter;

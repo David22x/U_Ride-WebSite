@@ -9,9 +9,29 @@ module.exports = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    usuario_id: { type: DataTypes.UUID, allowNull: false },
-    codigo: { type: DataTypes.STRING(6), allowNull: false },
-    expira_en: { type: DataTypes.DATE, allowNull: false },
+    usuarioId: {
+      type: DataTypes.UUID,
+      field: "usuario_id",
+      allowNull: false,
+    },
+    codigo: {
+      type: DataTypes.STRING(6),
+      allowNull: false,
+    },
+    tipo: {
+      type: DataTypes.ENUM("registro", "recuperacion"),
+      allowNull: false,
+      defaultValue: "registro",
+    },
+    usado: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    expiraEn: {
+      type: DataTypes.DATE,
+      field: "expira_en",
+      allowNull: false,
+    },
   },
   {
     tableName: "verificaciones_correo",

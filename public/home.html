@@ -371,8 +371,12 @@
             <input type="number" id="cvCupos" min="1" max="10" value="3" required/>
           </div>
           <div class="pfGroup">
-            <label>Notas / Reglas del viaje</label>
-            <textarea id="cvNotas" rows="3" placeholder="Puntualidad, no fumar, efectivo…"></textarea>
+            <label>Notas del viaje</label>
+            <textarea id="cvNotas" rows="2" placeholder="Información adicional…"></textarea>
+          </div>
+          <div class="pfGroup">
+            <label>Reglas de seguridad (RF9)</label>
+            <textarea id="cvReglas" rows="2" placeholder="Puntualidad, no fumar, efectivo, no compartir datos…"></textarea>
           </div>
           <div class="alert" id="alertCrear"></div>
         </div>
@@ -394,8 +398,74 @@
       <div class="modalBody" id="detailBody"></div>
       <div class="modalFooter">
         <button type="button" class="btnGhost" id="detailCancel">Cerrar</button>
+        <button type="button" class="btnGhostDanger" id="btnReportarViaje" style="display:none">⚠️ Reportar</button>
         <button type="button" class="btnPrimarySm" id="btnSolicitar">Solicitar cupo</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: CALIFICAR (RF8) ══════════════════════════ -->
+  <div class="modalOverlay hidden" id="modalCalificar">
+    <div class="modal">
+      <div class="modalHeader">
+        <h2>Calificar</h2>
+        <button class="modalClose" id="closeCalificar">✕</button>
+      </div>
+      <form id="formCalificar">
+        <div class="modalBody">
+          <p style="font-size:.9rem;color:var(--textSecondary);margin-bottom:1rem">Calificando a: <strong id="calNombre"></strong></p>
+          <input type="hidden" id="calViajeId"/>
+          <input type="hidden" id="calEvaluadoId"/>
+          <input type="hidden" id="calPuntuacion"/>
+          <div class="pfGroup">
+            <label>Puntuación</label>
+            <div class="starsWrap">
+              <button type="button" class="starBtn" data-val="1">★</button>
+              <button type="button" class="starBtn" data-val="2">★</button>
+              <button type="button" class="starBtn" data-val="3">★</button>
+              <button type="button" class="starBtn" data-val="4">★</button>
+              <button type="button" class="starBtn" data-val="5">★</button>
+            </div>
+          </div>
+          <div class="pfGroup">
+            <label>Comentario (opcional)</label>
+            <textarea id="calComentario" rows="3" placeholder="Escribe tu reseña…"></textarea>
+          </div>
+          <div class="alert" id="alertCalif"></div>
+        </div>
+        <div class="modalFooter">
+          <button type="button" class="btnGhost" id="cancelCalificar" onclick="document.getElementById('modalCalificar').classList.add('hidden')">Cancelar</button>
+          <button type="submit" class="btnPrimarySm">Enviar calificación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: REPORTAR (RF10) ══════════════════════════ -->
+  <div class="modalOverlay hidden" id="modalReporte">
+    <div class="modal">
+      <div class="modalHeader">
+        <h2>Reportar usuario</h2>
+        <button class="modalClose" id="closeReporte">✕</button>
+      </div>
+      <form id="formReporte">
+        <div class="modalBody">
+          <p style="font-size:.875rem;color:var(--textSecondary);margin-bottom:1rem">
+            Tu reporte será revisado por el administrador. Proporciona un motivo claro y detallado.
+          </p>
+          <input type="hidden" id="repReportadoId"/>
+          <input type="hidden" id="repViajeId"/>
+          <div class="pfGroup">
+            <label>Motivo del reporte</label>
+            <textarea id="repMotivo" rows="4" placeholder="Describe la conducta indebida (mínimo 10 caracteres)…" required></textarea>
+          </div>
+          <div class="alert" id="alertReporte"></div>
+        </div>
+        <div class="modalFooter">
+          <button type="button" class="btnGhost" onclick="document.getElementById('modalReporte').classList.add('hidden')">Cancelar</button>
+          <button type="submit" class="btnDanger">Enviar reporte</button>
+        </div>
+      </form>
     </div>
   </div>
 

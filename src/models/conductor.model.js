@@ -9,7 +9,12 @@ module.exports = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    usuario_id: { type: DataTypes.UUID, allowNull: false, unique: true },
+    usuarioId: {
+      type: DataTypes.UUID,
+      field: "usuario_id",
+      allowNull: false,
+      unique: true,
+    },
     vehiculo: { type: DataTypes.STRING(100), allowNull: false },
     placa: { type: DataTypes.STRING(20), allowNull: false },
     color: { type: DataTypes.STRING(50), allowNull: false },

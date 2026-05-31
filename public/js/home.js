@@ -1,22 +1,23 @@
 /* ============================================================
-    U-Ride — home.js
-    ============================================================ */
+    U-Ride — home.js   (versión completa — RF1–RF11)
+   ============================================================ */
 
   const userRaw = sessionStorage.getItem("uride_user");
-  if (!userRaw) window.location.href = "/login.html";
+  if (!userRaw) { window.location.href = "/login.html"; }
   const USER = JSON.parse(userRaw);
+
+  // Redirigir admin a su panel
+  if (USER.rol === "administrador") { window.location.href = "/admin.html"; }
 
   const socket = io({ withCredentials: true });
   socket.on("connect", () => socket.emit("unirse", USER.id));
-  socket.on("solicitud:aceptada", (data) => { pushNotif(data.mensaje, "ok"); cargarViajes(); });
-  socket.on("solicitud:rechazada", (data) => pushNotif(data.mensaje, "error"));
+  socket.on("solicitud:aceptada", (data) => { pushNotif(data.mensaje || "¡Tu solicitud fue aceptada!", "ok"); cargarViajes(); });
+  socket.on("solicitud:rechazada", (data) => pushNotif(data.mensaje || "Tu solicitud fue rechazada.", "error"));
   socket.on("error:socket", (data) => pushNotif(data.mensaje, "error"));
 
   /* DOM */
-  const sidebar        = document.getElementById("sidebar");
-  const sidebarToggle  = document.getElementById("sidebarToggle");
-  const navItems       = document.querySelectorAll(".navItem[data-view]");
   const views          = document.querySelectorAll(".view");
+  const navItems       = document.querySelectorAll(".navItem[data-view]");
   const greetingMsg    = document.getElementById("greetingMsg");
   const userNameEl     = document.getElementById("userName");
   const userRoleEl     = document.getElementById("userRole");
@@ -51,12 +52,14 @@
   let MODO = sessionStorage.getItem("uride_modo") || "pasajero";
   let viajeSelId = null;
 
+  /* ── INIT ── */
   (async function init() {
     rellenarUsuario();
     mostrarSaludo();
     aplicarModo(MODO, false);
     await Promise.all([cargarStats(), cargarViajes()]);
     cargarPerfilConductor();
+    cargarMisViajes();
   })();
 
   function rellenarUsuario() {
@@ -64,18 +67,21 @@
     userRoleEl.textContent = USER.rol === "administrador" ? "Administrador" : "Estudiante";
     const inicial = USER.nombre?.[0]?.toUpperCase() || "?";
     if (USER.foto) {
-      userAvatarEl.innerHTML = `<img src="${USER.foto}" alt="foto"/>`;
-      perfilAvatar.innerHTML = `<img src="${USER.foto}" alt="foto"/>`;
+      userAvatarEl.innerHTML = `<img src="${USER.foto}" alt="foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+      if(perfilAvatar) perfilAvatar.innerHTML = `<img src="${USER.foto}" alt="foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
     } else {
       userAvatarEl.textContent = inicial;
-      perfilAvatar.textContent = inicial;
+      if(perfilAvatar) perfilAvatar.textContent = inicial;
     }
-    document.getElementById("pfNombre").value   = USER.nombre   || "";
-    document.getElementById("pfApellido").value = USER.apellido || "";
-    document.getElementById("pfCorreo").value   = USER.correo   || "";
-    document.getElementById("pfCarrera").value  = USER.carrera  || "";
-    document.getElementById("pfZona").value     = USER.zona     || "";
-    document.getElementById("pfTelefono").value = USER.telefono || "";
+    const pfNombre = document.getElementById("pfNombre");
+    if (pfNombre) {
+      pfNombre.value   = USER.nombre   || "";
+      document.getElementById("pfApellido").value = USER.apellido || "";
+      document.getElementById("pfCorreo").value   = USER.correo   || "";
+      document.getElementById("pfCarrera").value  = USER.carrera  || "";
+      document.getElementById("pfZona").value     = USER.zona     || "";
+      document.getElementById("pfTelefono").value = USER.telefono || "";
+    }
   }
 
   function mostrarSaludo() {
@@ -111,8 +117,11 @@
     rolSwitchLabel.textContent = esConductor ? "Conductor" : "Pasajero";
     rolSwitchBtn.classList.toggle("modoConductor", esConductor);
     rolSwitchBtn.classList.toggle("modoPasajero",  !esConductor);
-    rolSwitchBtn.querySelector(".iconPasajero").style.display = esConductor ? "none" : "inline";
-    rolSwitchBtn.querySelector(".iconConductor").style.display = esConductor ? "inline" : "none";
+
+    const iconP = rolSwitchBtn.querySelector(".iconPasajero");
+    const iconC = rolSwitchBtn.querySelector(".iconConductor");
+    if (iconP) iconP.style.display = esConductor ? "none" : "inline";
+    if (iconC) iconC.style.display = esConductor ? "inline" : "none";
 
     optPasajero.classList.toggle("active",  !esConductor);
     optConductor.classList.toggle("active",  esConductor);
@@ -137,7 +146,7 @@
     if (animar) pushNotif(`Modo ${esConductor ? "conductor" : "pasajero"} activado.`, "info");
   }
 
-  /* ── Viajes ── */
+  /* ── Viajes home ── */
   async function cargarViajes(filtros = {}) {
     viajesGrid.innerHTML = `
       <div class="skeletonCard"></div>
@@ -159,15 +168,19 @@
     }
     container.innerHTML = viajes.map((v) => {
       const cuposCls = v.cuposDisponibles === 0 ? "none" : v.cuposDisponibles <= 1 ? "few" : "";
-      const inicial  = (v.conductorNombre?.[0] || "?").toUpperCase();
-      const hora     = `${v.horaSalida?.slice(0,5) || "--:--"} → ${v.horaLlegada?.slice(0,5) || "--:--"}`;
+      const nombre = v.conductor?.usuario
+        ? `${v.conductor.usuario.nombre} ${v.conductor.usuario.apellido}`
+        : (v.conductorNombre || "Conductor");
+      const inicial  = (nombre[0] || "?").toUpperCase();
+      const hora = `${v.horaSalida?.slice(0,5) || "--:--"} → ${v.horaLlegada?.slice(0,5) || "--:--"}`;
+      const rep = v.conductorReputacion ? `<span class="vcChip">⭐ ${v.conductorReputacion.promedio}</span>` : "";
       return `
       <article class="viajeCard" data-id="${v.id}">
         <div class="vcHeader">
           <div class="vcAv">${inicial}</div>
           <div class="vcHeaderInfo">
             <div class="vcRuta">${v.origen} → ${v.destino}</div>
-            <div class="vcConductorName">${v.conductorNombre || "Conductor"}</div>
+            <div class="vcConductorName">${nombre}</div>
           </div>
         </div>
         <div class="vcMeta">
@@ -179,15 +192,12 @@
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             ${formatearFecha(v.fecha)}
           </span>` : ""}
+          ${rep}
         </div>
         <div class="vcFooter">
           <span class="vcCupos ${cuposCls}">
             ${v.cuposDisponibles === 0 ? "Sin cupos" : `${v.cuposDisponibles} asiento${v.cuposDisponibles !== 1 ? "s" : ""}`}
           </span>
-          <div class="vcConductor">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            ${v.conductorNombre || "Conductor"}
-          </div>
         </div>
       </article>`;
     }).join("");
@@ -203,26 +213,53 @@
     try {
       const v = await apiGet(`/api/viajes/${id}`);
       document.getElementById("detailRuta").textContent = `${v.origen} → ${v.destino}`;
+      const conductorNombre = v.conductor?.usuario
+        ? `${v.conductor.usuario.nombre} ${v.conductor.usuario.apellido}`
+        : "—";
+      const reglasHtml = v.reglas?.descripcion
+        ? `<div class="detailRules"><strong>📋 Reglas del viaje:</strong><p>${v.reglas.descripcion}</p></div>`
+        : "";
+      const participantesHtml = v.participantes?.length
+        ? `<div><strong>Pasajeros confirmados (${v.participantes.length}):</strong><div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.4rem">${v.participantes.map(p => `<span class="participantePill">${p.pasajero?.usuario?.nombre || "?"}</span>`).join("")}</div></div>`
+        : "";
+
       document.getElementById("detailBody").innerHTML = `
         <div style="display:flex;flex-direction:column;gap:.85rem;font-size:.9rem;">
-          <div><strong>Conductor:</strong> ${v.conductor?.usuario?.nombre || "—"} ${v.conductor?.usuario?.apellido || ""}</div>
+          <div><strong>Conductor:</strong> ${conductorNombre}</div>
           <div><strong>Vehículo:</strong> ${v.conductor?.vehiculo || "—"} · ${v.conductor?.color || ""}</div>
           <div><strong>Placa:</strong> ${v.conductor?.placa || "—"}</div>
           <div><strong>Fecha:</strong> ${formatearFecha(v.fecha)}</div>
           <div><strong>Salida:</strong> ${v.horaSalida?.slice(0,5)} &nbsp;·&nbsp; <strong>Llegada:</strong> ${v.horaLlegada?.slice(0,5)}</div>
           <div><strong>Cupos disponibles:</strong> ${v.cuposDisponibles}</div>
           ${v.notas ? `<div><strong>Notas:</strong><br/><span style="color:var(--textSecondary)">${v.notas}</span></div>` : ""}
+          ${reglasHtml}
+          ${participantesHtml}
         </div>`;
+
+      const esMiViaje = v.conductor?.usuario?.id === USER.id;
       const btnSol = document.getElementById("btnSolicitar");
-      btnSol.disabled   = v.cuposDisponibles === 0;
-      btnSol.textContent = v.cuposDisponibles === 0 ? "Sin cupos" : "Solicitar cupo";
+      const btnReportar = document.getElementById("btnReportarViaje");
+
+      if (esMiViaje) {
+        btnSol.style.display = "none";
+        if (btnReportar) btnReportar.style.display = "none";
+      } else {
+        btnSol.style.display = "";
+        btnSol.disabled = v.cuposDisponibles === 0;
+        btnSol.textContent = v.cuposDisponibles === 0 ? "Sin cupos" : "Solicitar cupo";
+        if (btnReportar) {
+          btnReportar.style.display = "";
+          btnReportar.dataset.conductorId = v.conductor?.usuario?.id || "";
+        }
+      }
+
       modalViaje.classList.remove("hidden");
     } catch {
       pushNotif("No se pudo cargar el detalle del viaje.", "error");
     }
   }
 
-  document.getElementById("detailClose").addEventListener("click", () => modalViaje.classList.add("hidden"));
+  document.getElementById("detailClose").addEventListener("click",  () => modalViaje.classList.add("hidden"));
   document.getElementById("detailCancel").addEventListener("click", () => modalViaje.classList.add("hidden"));
 
   document.getElementById("btnSolicitar").addEventListener("click", async () => {
@@ -236,6 +273,15 @@
       pushNotif(err.message || "No se pudo enviar la solicitud.", "error");
     }
   });
+
+  // Botón reportar desde detalle viaje
+  const btnReportarViaje = document.getElementById("btnReportarViaje");
+  if (btnReportarViaje) {
+    btnReportarViaje.addEventListener("click", () => {
+      const conductorId = btnReportarViaje.dataset.conductorId;
+      if (conductorId) abrirModalReporte(conductorId, viajeSelId);
+    });
+  }
 
   /* ── Solicitudes (conductor) ── */
   async function cargarSolicitudes() {
@@ -252,13 +298,17 @@
       return;
     }
     solicitudesList.innerHTML = items.map((s) => {
-      const inicial = (s.pasajero?.nombre?.[0] || "?").toUpperCase();
+      const u = s.pasajero?.usuario;
+      const nombre = u ? `${u.nombre} ${u.apellido}` : "Pasajero";
+      const inicial = (nombre[0] || "?").toUpperCase();
+      const zona = u?.zona ? ` · ${u.zona}` : "";
       return `
       <div class="solCard" data-solId="${s.id}">
         <div class="solAv">${inicial}</div>
         <div class="solInfo">
-          <div class="solNombre">${s.pasajero?.nombre || ""} ${s.pasajero?.apellido || ""}</div>
+          <div class="solNombre">${nombre}${zona}</div>
           <div class="solRuta">${s.viaje?.origen} → ${s.viaje?.destino}</div>
+          <div class="solFecha" style="font-size:.78rem;color:var(--textMuted)">${formatearFecha(s.viaje?.fecha)}</div>
         </div>
         <div class="solActions">
           <button class="btnAceptar"  data-id="${s.id}">Aceptar</button>
@@ -276,7 +326,6 @@
   async function gestionarSolicitud(id, accion) {
     try {
       await apiPatch(`/api/solicitudes/${id}/${accion}`);
-      socket.emit(`solicitud:${accion}`, { solicitudId: id, conductorId: USER.id });
       pushNotif(`Solicitud ${accion === "aceptar" ? "aceptada" : "rechazada"} correctamente.`, "ok");
       cargarSolicitudes();
       cargarViajes();
@@ -310,6 +359,7 @@
       horaLlegada: document.getElementById("cvHoraLlegada").value,
       cuposTotal:  parseInt(document.getElementById("cvCupos").value),
       notas:       document.getElementById("cvNotas").value.trim(),
+      reglas:      document.getElementById("cvReglas")?.value.trim() || null,
     };
     if (body.horaLlegada <= body.horaSalida) {
       alertCrear.className = "alert show-error";
@@ -347,6 +397,209 @@
       grid.innerHTML = '<p style="color:rgba(10,14,26,.45)">Error al buscar viajes.</p>';
     }
   });
+
+  /* ── Mis Viajes ── */
+  async function cargarMisViajes() {
+    try {
+      const data = await apiGet("/api/viajes/mis-viajes");
+      renderMisViajesPasajero(data.pasajero || []);
+      renderMisViajesConductor(data.conductor || []);
+    } catch { /* silencioso */ }
+  }
+
+  function estadoBadge(estado) {
+    const map = {
+      publicado:  { cls: "badgeEstado publicado",  txt: "Publicado" },
+      en_curso:   { cls: "badgeEstado en_curso",   txt: "En curso" },
+      finalizado: { cls: "badgeEstado finalizado", txt: "Finalizado" },
+      cancelado:  { cls: "badgeEstado cancelado",  txt: "Cancelado" },
+    };
+    const b = map[estado] || { cls: "badgeEstado", txt: estado };
+    return `<span class="${b.cls}">${b.txt}</span>`;
+  }
+
+  function renderMisViajesPasajero(participaciones) {
+    const el = document.getElementById("tabComoPasajero");
+    if (!participaciones.length) {
+      el.innerHTML = '<p style="color:var(--textMuted);padding:1rem 0">No has participado en ningún viaje aún.</p>';
+      return;
+    }
+    el.innerHTML = participaciones.map((p) => {
+      const v = p.viaje || {};
+      const conductorNombre = v.conductor?.usuario
+        ? `${v.conductor.usuario.nombre} ${v.conductor.usuario.apellido}`
+        : "Conductor";
+      return `
+      <div class="miViajeCard">
+        <div class="mvHeader">
+          <div class="mvRuta">${v.origen || "—"} → ${v.destino || "—"}</div>
+          ${estadoBadge(v.estado)}
+        </div>
+        <div class="mvMeta">
+          <span>📅 ${formatearFecha(v.fecha)}</span>
+          <span>🕐 ${v.horaSalida?.slice(0,5) || "--:--"}</span>
+          <span>🚗 ${conductorNombre}</span>
+        </div>
+        ${v.estado === "finalizado" ? `
+        <div class="mvActions">
+          <button class="btnCalificar btnSmall" data-viaje="${v.id}" data-evaluado="${v.conductor?.usuario?.id}" data-nombre="${conductorNombre}">⭐ Calificar conductor</button>
+          <button class="btnReportar btnSmall btnSmallGhost" data-viaje="${v.id}" data-reportado="${v.conductor?.usuario?.id}">⚠️ Reportar</button>
+        </div>` : ""}
+      </div>`;
+    }).join("");
+
+    el.querySelectorAll(".btnCalificar").forEach(b =>
+      b.addEventListener("click", () => abrirModalCalificar(b.dataset.viaje, b.dataset.evaluado, b.dataset.nombre)));
+    el.querySelectorAll(".btnReportar").forEach(b =>
+      b.addEventListener("click", () => abrirModalReporte(b.dataset.reportado, b.dataset.viaje)));
+  }
+
+  function renderMisViajesConductor(viajes) {
+    const el = document.getElementById("tabComoConductor");
+    if (!viajes.length) {
+      el.innerHTML = '<p style="color:var(--textMuted);padding:1rem 0">No has publicado ningún viaje aún.</p>';
+      return;
+    }
+    el.innerHTML = viajes.map((v) => {
+      const solPendientes = v.solicitudes?.length || 0;
+      const pasajerosList = v.participantes?.map(p => {
+        const u = p.pasajero?.usuario;
+        return u ? `<span class="participantePill">${u.nombre} ${u.apellido}</span>` : "";
+      }).join("") || "";
+
+      return `
+      <div class="miViajeCard">
+        <div class="mvHeader">
+          <div class="mvRuta">${v.origen} → ${v.destino}</div>
+          ${estadoBadge(v.estado)}
+        </div>
+        <div class="mvMeta">
+          <span>📅 ${formatearFecha(v.fecha)}</span>
+          <span>🕐 ${v.horaSalida?.slice(0,5)}</span>
+          <span>💺 ${v.cuposDisponibles}/${v.cuposTotal} cupos</span>
+          ${solPendientes ? `<span class="badgeSolPend">${solPendientes} solicitud${solPendientes !== 1 ? "es" : ""} pendiente${solPendientes !== 1 ? "s" : ""}</span>` : ""}
+        </div>
+        ${pasajerosList ? `<div class="pasajerosList">${pasajerosList}</div>` : ""}
+        ${v.estado === "publicado" ? `
+        <div class="mvActions">
+          <button class="btnCancelarViaje btnSmall btnSmallGhost" data-id="${v.id}">Cancelar viaje</button>
+        </div>` : ""}
+        ${v.estado === "finalizado" && v.participantes?.length ? `
+        <div class="mvActions">
+          ${v.participantes.map(p => {
+            const u = p.pasajero?.usuario;
+            return u ? `<button class="btnCalificar btnSmall" data-viaje="${v.id}" data-evaluado="${u.id}" data-nombre="${u.nombre} ${u.apellido}">⭐ Calificar ${u.nombre}</button>` : "";
+          }).join("")}
+        </div>` : ""}
+      </div>`;
+    }).join("");
+
+    el.querySelectorAll(".btnCancelarViaje").forEach(b =>
+      b.addEventListener("click", async () => {
+        if (!confirm("¿Cancelar este viaje?")) return;
+        try {
+          await apiDel(`/api/viajes/${b.dataset.id}`);
+          pushNotif("Viaje cancelado.", "ok");
+          cargarMisViajes();
+          cargarViajes();
+        } catch (err) { pushNotif(err.message || "Error al cancelar.", "error"); }
+      }));
+
+    el.querySelectorAll(".btnCalificar").forEach(b =>
+      b.addEventListener("click", () => abrirModalCalificar(b.dataset.viaje, b.dataset.evaluado, b.dataset.nombre)));
+  }
+
+  /* ── Modal Calificar (RF8) ── */
+  function abrirModalCalificar(viajeId, evaluadoId, nombre) {
+    if (!evaluadoId || evaluadoId === "undefined") { pushNotif("No se puede calificar a este usuario.", "error"); return; }
+    const modal = document.getElementById("modalCalificar");
+    document.getElementById("calNombre").textContent = nombre;
+    document.getElementById("calViajeId").value    = viajeId;
+    document.getElementById("calEvaluadoId").value = evaluadoId;
+    document.getElementById("calPuntuacion").value  = "";
+    document.getElementById("calComentario").value  = "";
+    document.getElementById("alertCalif").className = "alert";
+    // Reset star UI
+    document.querySelectorAll(".starBtn").forEach(s => s.classList.remove("active"));
+    modal.classList.remove("hidden");
+  }
+
+  // Estrellas interactivas
+  document.querySelectorAll(".starBtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const val = parseInt(btn.dataset.val);
+      document.getElementById("calPuntuacion").value = val;
+      document.querySelectorAll(".starBtn").forEach(s => {
+        s.classList.toggle("active", parseInt(s.dataset.val) <= val);
+      });
+    });
+  });
+
+  document.getElementById("formCalificar")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const alertC = document.getElementById("alertCalif");
+    const viajeId    = document.getElementById("calViajeId").value;
+    const evaluadoId = document.getElementById("calEvaluadoId").value;
+    const puntuacion = document.getElementById("calPuntuacion").value;
+    const comentario = document.getElementById("calComentario").value.trim();
+
+    if (!puntuacion) {
+      alertC.className = "alert show-error";
+      alertC.textContent = "Selecciona una puntuación.";
+      return;
+    }
+    try {
+      await apiPost("/api/calificaciones", { viajeId, evaluadoId, puntuacion: parseInt(puntuacion) });
+      if (comentario) {
+        await apiPost("/api/calificaciones/resenas", { viajeId, destinoId: evaluadoId, comentario }).catch(() => {});
+      }
+      document.getElementById("modalCalificar").classList.add("hidden");
+      pushNotif("¡Calificación enviada!", "ok");
+      cargarStats();
+    } catch (err) {
+      alertC.className = "alert show-error";
+      alertC.textContent = err.message || "Error al calificar.";
+    }
+  });
+
+  document.getElementById("closeCalificar")?.addEventListener("click", () =>
+    document.getElementById("modalCalificar").classList.add("hidden"));
+
+  /* ── Modal Reportar (RF10) ── */
+  function abrirModalReporte(reportadoId, viajeId) {
+    if (!reportadoId || reportadoId === "undefined") { pushNotif("No se puede reportar.", "error"); return; }
+    const modal = document.getElementById("modalReporte");
+    document.getElementById("repReportadoId").value = reportadoId;
+    document.getElementById("repViajeId").value     = viajeId || "";
+    document.getElementById("repMotivo").value      = "";
+    document.getElementById("alertReporte").className = "alert";
+    modal.classList.remove("hidden");
+  }
+
+  document.getElementById("formReporte")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const alertR     = document.getElementById("alertReporte");
+    const reportadoId = document.getElementById("repReportadoId").value;
+    const viajeId     = document.getElementById("repViajeId").value;
+    const motivo      = document.getElementById("repMotivo").value.trim();
+
+    if (motivo.length < 10) {
+      alertR.className = "alert show-error";
+      alertR.textContent = "El motivo debe tener al menos 10 caracteres.";
+      return;
+    }
+    try {
+      await apiPost("/api/reportes", { reportadoId, viajeId, motivo });
+      document.getElementById("modalReporte").classList.add("hidden");
+      pushNotif("Reporte enviado. El administrador lo revisará.", "ok");
+    } catch (err) {
+      alertR.className = "alert show-error";
+      alertR.textContent = err.message || "Error al enviar el reporte.";
+    }
+  });
+
+  document.getElementById("closeReporte")?.addEventListener("click", () =>
+    document.getElementById("modalReporte").classList.add("hidden"));
 
   /* ── Perfil personal ── */
   document.getElementById("formPerfil").addEventListener("submit", async (e) => {
@@ -460,14 +713,6 @@
   });
 
   /* ── Navegación ── */
-  navItems.forEach((item) => {
-    item.addEventListener("click", (e) => {
-      e.preventDefault();
-      cambiarVista(item.dataset.view);
-      sidebar?.classList.remove("open");
-    });
-  });
-
   document.querySelectorAll("[data-view]").forEach((el) => {
     el.addEventListener("click", (e) => {
       const view = el.dataset.view;
@@ -483,21 +728,10 @@
     document.querySelector(`.navItem[data-view="${nombre}"]`)?.classList.add("active");
     if (nombre === "buscar") {
       const g = document.getElementById("viajesGridBuscar");
-      if (!g.children.length) cargarViajesEnGrid(g);
+      if (!g.children.length) cargarViajes().then(v => renderViajes(g, v)).catch(() => {});
     }
+    if (nombre === "misViajes") cargarMisViajes();
   }
-
-  async function cargarViajesEnGrid(grid) {
-    try { renderViajes(grid, await apiGet("/api/viajes")); }
-    catch { grid.innerHTML = '<p style="color:rgba(10,14,26,.45)">Error al cargar viajes.</p>'; }
-  }
-
-  /* ── Sidebar mobile ── */
-  sidebarToggle?.addEventListener("click", () => sidebar?.classList.toggle("open"));
-  document.addEventListener("click", (e) => {
-    if (sidebar && !sidebar.contains(e.target) && !sidebarToggle?.contains(e.target))
-      sidebar.classList.remove("open");
-  });
 
   /* ── Notificaciones ── */
   let notifCount = 0;
@@ -565,15 +799,18 @@
     if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || `Error ${r.status}`); }
     return r.json();
   }
-
   async function apiPost(url, body) {
     const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify(body) });
     if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || `Error ${r.status}`); }
     return r.json();
   }
-
-  async function apiPatch(url, body) {
+  async function apiPatch(url, body = {}) {
     const r = await fetch(url, { method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify(body) });
+    if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || `Error ${r.status}`); }
+    return r.json();
+  }
+  async function apiDel(url) {
+    const r = await fetch(url, { method: "DELETE", credentials: "include" });
     if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || `Error ${r.status}`); }
     return r.json();
   }

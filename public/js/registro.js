@@ -83,7 +83,7 @@ document.querySelectorAll(".toggle-pass").forEach((btn) => {
 
 /* ── Medidor de fortaleza ───────────────────────────────── */
 const passInput = document.getElementById("contrasena");
-const passLabel = document.getElementById("pass-label");
+const passLabel = document.getElementById("passLabel");
 const bars = [1, 2, 3, 4].map((n) => document.getElementById(`bar-${n}`));
 
 function evaluarPass(val) {

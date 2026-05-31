@@ -1048,3 +1048,150 @@ body {
   .tabs { width: 100%; }
   .tab  { flex: 1; text-align: center; }
 }
+
+/* ══ MIS VIAJES ════════════════════════════════════════ */
+.miViajeCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radiusMd);
+  padding: 1rem 1.25rem;
+  margin-bottom: .75rem;
+  box-shadow: var(--shadowSm);
+}
+.mvHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .5rem;
+}
+.mvRuta {
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--textPrimary);
+}
+.mvMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  font-size: .8rem;
+  color: var(--textSecondary);
+  margin-bottom: .5rem;
+}
+.mvMeta span { display: flex; align-items: center; gap: .25rem; }
+.mvActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .6rem;
+}
+.btnSmall {
+  padding: .35rem .85rem;
+  font-size: .8rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 500;
+  transition: background .15s;
+}
+.btnSmall:hover { background: var(--accentDark); }
+.btnSmallGhost {
+  background: transparent;
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+.btnSmallGhost:hover { background: var(--errorSoft); }
+
+/* Estado badges */
+.badgeEstado {
+  font-size: .72rem;
+  padding: .2rem .6rem;
+  border-radius: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badgeEstado.publicado  { background: var(--accentSoft); color: var(--accent); }
+.badgeEstado.en_curso   { background: #FEF3C7; color: #92400E; }
+.badgeEstado.finalizado { background: var(--successSoft); color: var(--success); }
+.badgeEstado.cancelado  { background: var(--errorSoft); color: var(--error); }
+.badgeSolPend {
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: .72rem;
+  padding: .2rem .6rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* Participantes pills */
+.participantePill {
+  background: var(--accentSoft);
+  color: var(--accent);
+  font-size: .75rem;
+  padding: .15rem .5rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+.pasajerosList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-top: .4rem;
+}
+
+/* ══ REGLAS DEL VIAJE ══════════════════════════════════ */
+.detailRules {
+  background: var(--accentSoft);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: .6rem .85rem;
+  font-size: .85rem;
+}
+.detailRules strong { color: var(--accent); }
+.detailRules p { color: var(--textSecondary); margin-top: .25rem; }
+
+/* ══ CALIFICACIONES — Estrellas ════════════════════════ */
+.starsWrap {
+  display: flex;
+  gap: .25rem;
+}
+.starBtn {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  color: #D1D5DB;
+  cursor: pointer;
+  transition: color .15s, transform .1s;
+  padding: 0;
+  line-height: 1;
+}
+.starBtn:hover, .starBtn.active { color: #F59E0B; transform: scale(1.1); }
+
+/* ══ BOTONES EXTRA ══════════════════════════════════════ */
+.btnGhostDanger {
+  background: transparent;
+  color: var(--error);
+  border: 1px solid var(--error);
+  border-radius: 10px;
+  padding: .55rem 1.1rem;
+  font-size: .875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btnGhostDanger:hover { background: var(--errorSoft); }
+.btnDanger {
+  background: var(--error);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: .6rem 1.2rem;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btnDanger:hover { background: #B91C1C; }
+

@@ -9,9 +9,21 @@ const Calificacion = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    evaluador_id: { type: DataTypes.UUID, allowNull: false },
-    evaluado_id: { type: DataTypes.UUID, allowNull: false },
-    viaje_id: { type: DataTypes.UUID, allowNull: false },
+    evaluadorId: {
+      type: DataTypes.UUID,
+      field: "evaluador_id",
+      allowNull: false,
+    },
+    evaluadoId: {
+      type: DataTypes.UUID,
+      field: "evaluado_id",
+      allowNull: false,
+    },
+    viajeId: {
+      type: DataTypes.UUID,
+      field: "viaje_id",
+      allowNull: false,
+    },
     puntuacion: {
       type: DataTypes.DECIMAL(2, 1),
       allowNull: false,

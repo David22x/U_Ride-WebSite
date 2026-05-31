@@ -9,16 +9,36 @@ module.exports = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    admin_id: { type: DataTypes.UUID, allowNull: false },
-    estudiante_id: { type: DataTypes.UUID, allowNull: false },
-    reporte_id: { type: DataTypes.UUID, allowNull: true },
+    adminId: {
+      type: DataTypes.UUID,
+      field: "admin_id",
+      allowNull: false,
+    },
+    estudianteId: {
+      type: DataTypes.UUID,
+      field: "estudiante_id",
+      allowNull: false,
+    },
+    reporteId: {
+      type: DataTypes.UUID,
+      field: "reporte_id",
+      allowNull: true,
+    },
     tipo: {
       type: DataTypes.ENUM("advertencia", "suspension"),
       allowNull: false,
     },
     descripcion: { type: DataTypes.TEXT, allowNull: true },
-    duracion_dias: { type: DataTypes.INTEGER, allowNull: true },
-    fecha_fin: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    duracionDias: {
+      type: DataTypes.INTEGER,
+      field: "duracion_dias",
+      allowNull: true,
+    },
+    fechaFin: {
+      type: DataTypes.DATE,
+      field: "fecha_fin",
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     tableName: "acciones_administrativas",
