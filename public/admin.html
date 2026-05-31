@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>U-Ride — Administración</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/home.css"/>
+  <link rel="stylesheet" href="css/admin.css"/>
+</head>
+<body>
+  <div class="mainWrap">
+    <header class="topbar">
+      <div class="logoTop" onclick="location.href='/home.html'" style="cursor:pointer">
+        <span class="logoTxtTop">U-RIDE</span>
+        <div class="logoUnderline"></div>
+      </div>
+      <nav class="navTop">
+        <a href="#" class="navTopItem active" data-tab="reportes">Reportes</a>
+        <a href="#" class="navTopItem" data-tab="usuarios">Usuarios</a>
+      </nav>
+      <div class="topbarRight">
+        <span class="adminBadge">👑 Admin</span>
+        <button class="btnGhost" id="btnLogout" style="margin-left:.5rem;padding:.4rem .9rem;font-size:.82rem">Salir</button>
+      </div>
+    </header>
+
+    <main class="adminMain">
+      <div class="adminHeader">
+        <h1 class="adminTitle">Panel de Administración</h1>
+        <p class="adminSub">Gestiona reportes y usuarios de U-Ride</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="adminStats" id="adminStats">
+        <div class="statCard"><span class="statNum" id="totalReportes">—</span><span class="statLabel">Reportes totales</span></div>
+        <div class="statCard"><span class="statNum" id="reportesPendientes">—</span><span class="statLabel">Pendientes</span></div>
+        <div class="statCard"><span class="statNum" id="usuariosSuspendidos">—</span><span class="statLabel">Suspendidos</span></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="adminTabs" id="adminTabs">
+        <button class="adminTab active" data-tab="reportes">📋 Reportes</button>
+        <button class="adminTab" data-tab="usuarios">👥 Usuarios</button>
+      </div>
+
+      <!-- Panel reportes -->
+      <div class="adminPanel active" id="panelReportes">
+        <div class="panelToolbar">
+          <select id="filtroEstadoReporte" class="selectFiltro">
+            <option value="">Todos los estados</option>
+            <option value="pendiente">Pendientes</option>
+            <option value="resuelto">Resueltos</option>
+          </select>
+          <button class="btnPrimarySm" id="btnRecargarReportes">Actualizar</button>
+        </div>
+        <div id="listaReportes" class="adminList">
+          <div class="loadingPill">Cargando reportes…</div>
+        </div>
+      </div>
+
+      <!-- Panel usuarios -->
+      <div class="adminPanel" id="panelUsuarios">
+        <div class="panelToolbar">
+          <input type="text" id="buscarUsuario" class="inputBuscar" placeholder="Buscar por nombre o correo…"/>
+        </div>
+        <div id="listaUsuarios" class="adminList">
+          <div class="loadingPill">Cargando usuarios…</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal acción sobre reporte -->
+  <div class="modalOverlay hidden" id="modalAccion">
+    <div class="modal">
+      <div class="modalHeader">
+        <h2 id="modalAccionTitle">Acción administrativa</h2>
+        <button class="modalClose" id="closeAccion">✕</button>
+      </div>
+      <div class="modalBody">
+        <p style="font-size:.875rem;color:var(--textSecondary);margin-bottom:1rem" id="modalAccionDesc"></p>
+        <div class="pfGroup">
+          <label>Mensaje para el usuario (opcional)</label>
+          <textarea id="accionMensaje" rows="3" placeholder="Explica el motivo de la acción…"></textarea>
+        </div>
+        <div class="alert" id="alertAccion"></div>
+      </div>
+      <div class="modalFooter">
+        <button class="btnGhost" onclick="document.getElementById('modalAccion').classList.add('hidden')">Cancelar</button>
+        <button class="btnPrimarySm" id="btnConfirmarAccion">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toastContainer" id="toastContainer"></div>
+  <script src="js/admin.js"></script>
+</body>
+</html>

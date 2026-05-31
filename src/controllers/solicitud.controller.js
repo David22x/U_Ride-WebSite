@@ -23,3 +23,13 @@ exports.rechazar = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.pendientes = async (req, res, next) => {
+  try {
+    const solicitudes = await solicitudService.pendientes(req.usuario.id);
+
+    res.json(solicitudes);
+  } catch (err) {
+    next(err);
+  }
+};

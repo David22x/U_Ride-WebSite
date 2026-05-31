@@ -93,6 +93,18 @@ Participacion.belongsTo(Viaje, {
   as: "viaje",
 });
 
+/* Pasajero ↔ Participaciones */
+
+Pasajero.hasMany(Participacion, {
+  foreignKey: "pasajero_id",
+  as: "participaciones",
+});
+
+Participacion.belongsTo(Pasajero, {
+  foreignKey: "pasajero_id",
+  as: "pasajero",
+});
+
 /* Usuario ↔ Calificaciones */
 Usuario.hasMany(Calificacion, {
   foreignKey: "evaluador_id",

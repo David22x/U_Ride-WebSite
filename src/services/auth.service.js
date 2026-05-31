@@ -93,7 +93,7 @@ exports.iniciarRegistro = async ({
    PASO 2 — Verificar código
    ============================================================ */
 exports.verificarCodigo = async (correo, codigo) => {
-  const { Usuario, RegistroPendiente } = models();
+  const { Usuario, RegistroPendiente, Pasajero } = models();
 
   const pendiente = await RegistroPendiente.findOne({
     where: {
@@ -135,6 +135,10 @@ exports.verificarCodigo = async (correo, codigo) => {
       hooks: false,
     },
   );
+
+  await Pasajero.create({
+    usuario_id: usuario.id,
+  });
 
   await pendiente.update({
     usado: true,
@@ -272,18 +276,18 @@ exports.enviarRecuperacion = async (correo) => {
 
 exports.verificarCodigoRecuperacion = async (correo, codigo) => {
   const { Op } = require("sequelize");
-  const { Usuario, VerificacionCorreo } = getModels();
+  const { Usuario, VerificacionCorreo } = models();
 
   const usuario = await Usuario.findOne({ where: { correo } });
   if (!usuario) throw apiError("Código incorrecto o expirado.", 400);
 
   const verif = await VerificacionCorreo.findOne({
     where: {
-      usuarioId: usuario.id,
+      usuario_id: usuario.id,
       codigo,
       tipo: "recuperacion",
       usado: false,
-      expiraEn: { [Op.gt]: new Date() },
+      expira_en: { [Op.gt]: new Date() },
     },
   });
 
@@ -301,7 +305,7 @@ exports.verificarCodigoRecuperacion = async (correo, codigo) => {
    ============================================================ */
 exports.cambiarContrasena = async (correo, codigo, nuevaContrasena) => {
   const { Op } = require("sequelize");
-  const { Usuario, VerificacionCorreo } = getModels();
+  const { Usuario, VerificacionCorreo } = models();
 
   if (!nuevaContrasena || nuevaContrasena.length < 8)
     throw apiError("La contraseña debe tener al menos 8 caracteres.", 400);
@@ -312,11 +316,11 @@ exports.cambiarContrasena = async (correo, codigo, nuevaContrasena) => {
   // Doble verificación: el código debe seguir vigente
   const verif = await VerificacionCorreo.findOne({
     where: {
-      usuarioId: usuario.id,
+      usuario_id: usuario.id,
       codigo,
       tipo: "recuperacion",
       usado: false,
-      expiraEn: { [Op.gt]: new Date() },
+      expira_en: { [Op.gt]: new Date() },
     },
   });
 

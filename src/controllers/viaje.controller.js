@@ -1,50 +1,102 @@
 const viajeService = require("../services/viaje.service");
 
-exports.listar = async (req, res, next) => {
+exports.buscarViajes = async (req, res, next) => {
   try {
-    const viajes = await viajeService.buscar(req.query);
-    res.json(viajes);
-  } catch (err) {
-    next(err);
+    res.json(await viajeService.buscarViajes(req.query));
+  } catch (e) {
+    next(e);
   }
 };
-
-exports.crear = async (req, res, next) => {
+exports.crearViaje = async (req, res, next) => {
   try {
-    const viaje = await viajeService.crear(req.usuario.id, req.body);
-    res.status(201).json(viaje);
-  } catch (err) {
-    next(err);
+    res
+      .status(201)
+      .json(await viajeService.crearViaje(req.usuario.id, req.body));
+  } catch (e) {
+    next(e);
   }
 };
-
-exports.obtener = async (req, res, next) => {
+exports.obtenerViaje = async (req, res, next) => {
   try {
-    const viaje = await viajeService.obtenerPorId(req.params.id);
-    res.json(viaje);
-  } catch (err) {
-    next(err);
+    res.json(await viajeService.obtenerViajePorId(req.params.id));
+  } catch (e) {
+    next(e);
   }
 };
-
-exports.actualizar = async (req, res, next) => {
+exports.modificarViaje = async (req, res, next) => {
   try {
-    const viaje = await viajeService.actualizar(
-      req.params.id,
-      req.usuario.id,
-      req.body,
+    res.json(
+      await viajeService.modificarViaje(
+        req.params.id,
+        req.usuario.id,
+        req.body,
+      ),
     );
-    res.json(viaje);
-  } catch (err) {
-    next(err);
+  } catch (e) {
+    next(e);
+  }
+};
+exports.cancelarViaje = async (req, res, next) => {
+  try {
+    res.json(await viajeService.cancelarViaje(req.params.id, req.usuario.id));
+  } catch (e) {
+    next(e);
+  }
+};
+exports.misViajes = async (req, res, next) => {
+  try {
+    res.json({
+      conductor: await viajeService.misViajesComoCondcutor(req.usuario.id),
+      pasajero: await viajeService.misViajesComoPasajero(req.usuario.id),
+    });
+  } catch (e) {
+    next(e);
   }
 };
 
-exports.cancelar = async (req, res, next) => {
+// Solicitudes
+exports.enviarSolicitud = async (req, res, next) => {
   try {
-    await viajeService.cancelar(req.params.id, req.usuario.id);
-    res.json({ mensaje: "Viaje cancelado." });
-  } catch (err) {
-    next(err);
+    res
+      .status(201)
+      .json(
+        await viajeService.enviarSolicitud(req.usuario.id, req.body.viajeId),
+      );
+  } catch (e) {
+    next(e);
+  }
+};
+exports.cancelarSolicitud = async (req, res, next) => {
+  try {
+    res.json(
+      await viajeService.cancelarSolicitud(req.params.id, req.usuario.id),
+    );
+  } catch (e) {
+    next(e);
+  }
+};
+exports.aceptarSolicitud = async (req, res, next) => {
+  try {
+    res.json(
+      await viajeService.aceptarSolicitud(req.params.id, req.usuario.id),
+    );
+  } catch (e) {
+    next(e);
+  }
+};
+exports.rechazarSolicitud = async (req, res, next) => {
+  try {
+    res.json(
+      await viajeService.rechazarSolicitud(req.params.id, req.usuario.id),
+    );
+  } catch (e) {
+    next(e);
+  }
+};
+exports.solicitudesPend = async (req, res, next) => {
+  try {
+    res.json(await viajeService.solicitudesPendientes(req.usuario.id));
+  } catch (e) {
+    next(e);
   }
 };
