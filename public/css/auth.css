@@ -736,3 +736,26 @@ body {
 .hidden {
     display: none !important;
 }
+/* ── Medidor de fortaleza de contraseña ── */
+.passStrengthWrap {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  margin-top: .45rem;
+}
+.bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 4px;
+  background: #E5E7EB;
+  transition: background .25s;
+}
+.bar.weak   { background: #EF4444; }
+.bar.medium { background: #F59E0B; }
+.bar.strong { background: #10B981; }
+.passLabel {
+  font-size: .72rem;
+  color: #6B7280;
+  white-space: nowrap;
+  min-width: 80px;
+}

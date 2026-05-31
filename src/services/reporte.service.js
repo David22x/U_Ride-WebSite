@@ -25,7 +25,7 @@ exports.crearReporte = async (
   reportanteId,
   { reportadoId, viajeId, motivo, evidencia },
 ) => {
-  const { Reporte, Usuario, Viaje, Participacion, Conductor, Pasajero } = M();
+  const { Reporte, Viaje, Participacion, Conductor, Pasajero } = M();
 
   if (reportanteId === reportadoId)
     throw apiError("No puedes reportarte a ti mismo.", 400);
@@ -33,65 +33,41 @@ exports.crearReporte = async (
   if (!motivo?.trim() || motivo.trim().length < 10)
     throw apiError("El motivo debe tener al menos 10 caracteres.", 400);
 
-  // Verificar que el viaje existe y que el reportante participó
   const viaje = await Viaje.findByPk(viajeId);
   if (!viaje) throw apiError("Viaje no encontrado.", 404);
 
-  // Verificar que el reportado también participó en ese viaje
-  const conductorReportado = await Conductor.findOne({
-    where: { usuarioId: reportadoId },
-  });
-  const pasajeroReportante = await Pasajero.findOne({
-    where: { usuarioId: reportanteId },
-  });
-  const pasajeroReportado = await Pasajero.findOne({
-    where: { usuarioId: reportadoId },
-  });
-  const conductorReportante = await Conductor.findOne({
-    where: { usuarioId: reportanteId },
-  });
+  const conductorReportado = await Conductor.findOne({ where: { usuarioId: reportadoId } });
+  const pasajeroReportante = await Pasajero.findOne({ where: { usuarioId: reportanteId } });
+  const pasajeroReportado = await Pasajero.findOne({ where: { usuarioId: reportadoId } });
+  const conductorReportante = await Conductor.findOne({ where: { usuarioId: reportanteId } });
 
-  // Al menos uno de los dos debe haber participado en el viaje
   const reportadoEsConductor =
     conductorReportado && viaje.conductorId === conductorReportado.id;
   const reportadoEsPasajero = pasajeroReportado
     ? await Participacion.findOne({
-        where: {
-          viajeId,
-          pasajeroId: pasajeroReportado.id,
-          estado: "confirmado",
-        },
+        where: { viajeId, pasajeroId: pasajeroReportado.id, estado: "confirmado" },
       })
     : null;
 
   if (!reportadoEsConductor && !reportadoEsPasajero)
     throw apiError("El usuario reportado no participó en este viaje.", 400);
 
-  // Verificar que el reportante participó
   const reportanteEsConductor =
     conductorReportante && viaje.conductorId === conductorReportante.id;
   const reportanteEsPasajero = pasajeroReportante
     ? await Participacion.findOne({
-        where: {
-          viajeId,
-          pasajeroId: pasajeroReportante.id,
-          estado: "confirmado",
-        },
+        where: { viajeId, pasajeroId: pasajeroReportante.id, estado: "confirmado" },
       })
     : null;
 
   if (!reportanteEsConductor && !reportanteEsPasajero)
     throw apiError("No participaste en este viaje.", 403);
 
-  // Solo 1 reporte por par en el mismo viaje
   const yaReportó = await Reporte.findOne({
     where: { reportanteId, reportadoId, viajeId },
   });
   if (yaReportó)
-    throw apiError(
-      "Ya realizaste un reporte sobre este usuario en este viaje.",
-      409,
-    );
+    throw apiError("Ya realizaste un reporte sobre este usuario en este viaje.", 409);
 
   return Reporte.create({
     reportanteId,
@@ -106,16 +82,10 @@ exports.crearReporte = async (
 /* ────────────────────────────────────────────────────────────
    RF10 — Editar reporte (hasta 10 min, sin respuesta admin)
    ─────────────────────────────────────────────────────────── */
-exports.editarReporte = async (
-  reporteId,
-  reportanteId,
-  { motivo, evidencia },
-) => {
+exports.editarReporte = async (reporteId, reportanteId, { motivo, evidencia }) => {
   const { Reporte } = M();
 
-  const reporte = await Reporte.findOne({
-    where: { id: reporteId, reportanteId },
-  });
+  const reporte = await Reporte.findOne({ where: { id: reporteId, reportanteId } });
   if (!reporte) throw apiError("Reporte no encontrado.", 404);
   if (reporte.estado !== "pendiente")
     throw apiError("No puedes editar un reporte ya revisado.", 400);
@@ -123,10 +93,7 @@ exports.editarReporte = async (
   const minutosTranscurridos =
     (Date.now() - new Date(reporte.createdAt).getTime()) / 60_000;
   if (minutosTranscurridos > 10)
-    throw apiError(
-      "Solo puedes editar el reporte durante los primeros 10 minutos.",
-      400,
-    );
+    throw apiError("Solo puedes editar el reporte durante los primeros 10 minutos.", 400);
 
   const actualizar = {};
   if (motivo?.trim()) actualizar.motivo = motivo.trim();
@@ -136,14 +103,12 @@ exports.editarReporte = async (
 };
 
 /* ────────────────────────────────────────────────────────────
-   RF10 — Eliminar reporte (hasta que el admin lo atienda)
+   RF10 — Eliminar reporte
    ─────────────────────────────────────────────────────────── */
 exports.eliminarReporte = async (reporteId, reportanteId) => {
   const { Reporte } = M();
 
-  const reporte = await Reporte.findOne({
-    where: { id: reporteId, reportanteId },
-  });
+  const reporte = await Reporte.findOne({ where: { id: reporteId, reportanteId } });
   if (!reporte) throw apiError("Reporte no encontrado.", 404);
   if (reporte.estado !== "pendiente")
     throw apiError("No puedes eliminar un reporte ya revisado.", 400);
@@ -160,7 +125,7 @@ exports.misReportes = async (reportanteId) => {
 
   return Reporte.findAll({
     where: { reportanteId },
-    order: [["createdAt", "DESC"]],
+    order: [["created_at", "DESC"]],
     include: [
       {
         model: Usuario,
@@ -189,7 +154,7 @@ exports.listarReportesAdmin = async ({ estado, page = 1, limit = 20 }) => {
 
   const { count, rows } = await Reporte.findAndCountAll({
     where,
-    order: [["createdAt", "DESC"]],
+    order: [["created_at", "DESC"]],
     limit: parseInt(limit),
     offset,
     include: [
@@ -201,15 +166,7 @@ exports.listarReportesAdmin = async ({ estado, page = 1, limit = 20 }) => {
       {
         model: Usuario,
         as: "reportado",
-        attributes: [
-          "id",
-          "nombre",
-          "apellido",
-          "correo",
-          "foto",
-          "estado",
-          "advertencias",
-        ],
+        attributes: ["id", "nombre", "apellido", "correo", "foto", "estado", "advertencias"],
       },
       {
         model: Viaje,
@@ -238,15 +195,7 @@ exports.obtenerReporte = async (reporteId) => {
       {
         model: Usuario,
         as: "reportado",
-        attributes: [
-          "id",
-          "nombre",
-          "apellido",
-          "correo",
-          "foto",
-          "estado",
-          "advertencias",
-        ],
+        attributes: ["id", "nombre", "apellido", "correo", "foto", "estado", "advertencias"],
       },
       {
         model: Viaje,
@@ -257,11 +206,7 @@ exports.obtenerReporte = async (reporteId) => {
         model: AccionAdministrativa,
         as: "acciones",
         include: [
-          {
-            model: Usuario,
-            as: "admin",
-            attributes: ["id", "nombre", "apellido"],
-          },
+          { model: Usuario, as: "admin", attributes: ["id", "nombre", "apellido"] },
         ],
       },
     ],
@@ -274,10 +219,7 @@ exports.obtenerReporte = async (reporteId) => {
 /* ────────────────────────────────────────────────────────────
    RF11 — Admin: advertir a un estudiante
    ─────────────────────────────────────────────────────────── */
-exports.advertirEstudiante = async (
-  adminId,
-  { estudianteId, reporteId, descripcion },
-) => {
+exports.advertirEstudiante = async (adminId, { estudianteId, reporteId, descripcion }) => {
   const { Usuario, AccionAdministrativa, Reporte } = M();
 
   const estudiante = await Usuario.findByPk(estudianteId);
@@ -288,7 +230,6 @@ exports.advertirEstudiante = async (
   const seq = require("../config/database").sequelize;
 
   await seq.transaction(async (t) => {
-    // Registrar acción
     await AccionAdministrativa.create(
       {
         adminId,
@@ -300,20 +241,14 @@ exports.advertirEstudiante = async (
       { transaction: t },
     );
 
-    // El trigger en la BD incrementa advertencias y suspende si llega a 3.
-    // Aquí lo hacemos también en JS como respaldo:
     const nuevasAdvert = (estudiante.advertencias || 0) + 1;
     const nuevoEstado = nuevasAdvert >= 3 ? "suspendido" : estudiante.estado;
 
     await estudiante.update(
-      {
-        advertencias: nuevasAdvert,
-        estado: nuevoEstado,
-      },
+      { advertencias: nuevasAdvert, estado: nuevoEstado },
       { transaction: t },
     );
 
-    // Marcar reporte como revisado
     if (reporteId) {
       await Reporte.update(
         { estado: "revisado" },
@@ -394,10 +329,7 @@ exports.levantarSuspension = async (adminId, estudianteId) => {
     throw apiError("El estudiante no está suspendido.", 400);
 
   await estudiante.update({ estado: "activo" });
-  return {
-    mensaje:
-      "Suspensión levantada. El estudiante puede volver a usar la plataforma.",
-  };
+  return { mensaje: "Suspensión levantada. El estudiante puede volver a usar la plataforma." };
 };
 
 /* ────────────────────────────────────────────────────────────
@@ -408,7 +340,7 @@ exports.historialAcciones = async (estudianteId) => {
 
   return AccionAdministrativa.findAll({
     where: { estudianteId },
-    order: [["createdAt", "DESC"]],
+    order: [["created_at", "DESC"]],
     include: [
       { model: Usuario, as: "admin", attributes: ["id", "nombre", "apellido"] },
     ],

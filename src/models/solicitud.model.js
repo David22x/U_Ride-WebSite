@@ -14,7 +14,6 @@ const Solicitud = sequelize.define(
       field: "pasajero_id",
       allowNull: false,
     },
-
     viajeId: {
       type: DataTypes.UUID,
       field: "viaje_id",
@@ -24,7 +23,11 @@ const Solicitud = sequelize.define(
       type: DataTypes.ENUM("pendiente", "aceptada", "rechazada", "cancelada"),
       defaultValue: "pendiente",
     },
-    fecha_envio: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    fechaEnvio: {
+      type: DataTypes.DATE,
+      field: "fecha_envio",
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     tableName: "solicitudes",

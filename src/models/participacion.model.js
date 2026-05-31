@@ -9,34 +9,33 @@ module.exports = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-
-    viaje_id: {
+    viajeId: {
       type: DataTypes.UUID,
+      field: "viaje_id",
       allowNull: false,
     },
-
-    pasajero_id: {
+    pasajeroId: {
       type: DataTypes.UUID,
+      field: "pasajero_id",
       allowNull: false,
     },
-
-    solicitud_id: {
+    solicitudId: {
       type: DataTypes.UUID,
+      field: "solicitud_id",
       allowNull: false,
     },
-
     estado: {
       type: DataTypes.ENUM("confirmado", "cancelado"),
       defaultValue: "confirmado",
     },
-
-    fecha_confirmacion: {
+    fechaConfirmacion: {
       type: DataTypes.DATE,
+      field: "fecha_confirmacion",
       defaultValue: DataTypes.NOW,
     },
-
-    asistencia_pasajero: {
+    asistenciaPasajero: {
       type: DataTypes.BOOLEAN,
+      field: "asistencia_pasajero",
       defaultValue: false,
     },
   },

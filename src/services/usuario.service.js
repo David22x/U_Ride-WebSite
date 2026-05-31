@@ -23,21 +23,23 @@ exports.obtenerStats = async (usuarioId) => {
 
   let totalViajes = 0;
 
-  // Viajes como conductor
-  const conductor = await Conductor.findOne({ where: { usuario_id: usuarioId } });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (conductor) {
-    totalViajes += await Viaje.count({ where: { conductor_id: conductor.id, estado: "finalizado" } });
+    totalViajes += await Viaje.count({
+      where: { conductorId: conductor.id, estado: "finalizado" },
+    });
   }
 
-  // Viajes como pasajero
-  const pasajero = await Pasajero.findOne({ where: { usuario_id: usuarioId } });
+  const pasajero = await Pasajero.findOne({ where: { usuarioId } });
   if (pasajero) {
-    totalViajes += await Participacion.count({ where: { pasajero_id: pasajero.id, estado: "confirmado" } });
+    totalViajes += await Participacion.count({
+      where: { pasajeroId: pasajero.id, estado: "confirmado" },
+    });
   }
 
   const promedioRow = await Calificacion.findOne({
     attributes: [[fn("AVG", col("puntuacion")), "promedio"]],
-    where: { evaluado_id: usuarioId },
+    where: { evaluadoId: usuarioId },
     raw: true,
   });
 

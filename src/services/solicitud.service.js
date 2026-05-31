@@ -8,9 +8,7 @@ function apiError(msg, status = 400) {
 }
 
 exports.crear = async (usuarioId, viajeId) => {
-  const pasajero = await Pasajero.findOne({
-    where: { usuario_id: usuarioId },
-  });
+  const pasajero = await Pasajero.findOne({ where: { usuarioId } });
 
   if (!pasajero) {
     throw apiError("Perfil de pasajero no encontrado", 404);
@@ -32,8 +30,8 @@ exports.crear = async (usuarioId, viajeId) => {
 
   const solicitudExistente = await Solicitud.findOne({
     where: {
-      pasajero_id: pasajero.id,
-      viaje_id: viajeId,
+      pasajeroId: pasajero.id,
+      viajeId,
       estado: { [Op.in]: ["pendiente", "aceptada"] },
     },
   });
@@ -43,21 +41,21 @@ exports.crear = async (usuarioId, viajeId) => {
   }
 
   return Solicitud.create({
-    pasajero_id: pasajero.id,
-    viaje_id: viajeId,
+    pasajeroId: pasajero.id,
+    viajeId,
     estado: "pendiente",
   });
 };
 
 exports.aceptar = async (solicitudId, usuarioId) => {
-  const conductor = await Conductor.findOne({ where: { usuario_id: usuarioId } });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) throw apiError("Perfil de conductor no encontrado.", 403);
 
   const solicitud = await Solicitud.findByPk(solicitudId, {
     include: [{ model: Viaje, as: "viaje" }],
   });
   if (!solicitud) throw apiError("Solicitud no encontrada.", 404);
-  if (solicitud.viaje.conductor_id !== conductor.id)
+  if (solicitud.viaje.conductorId !== conductor.id)
     throw apiError("Sin permiso.", 403);
   if (solicitud.estado !== "pendiente")
     throw apiError("Esta solicitud ya fue procesada.", 400);
@@ -65,24 +63,25 @@ exports.aceptar = async (solicitudId, usuarioId) => {
     throw apiError("Sin cupos disponibles.", 400);
 
   await solicitud.update({ estado: "aceptada" });
-  await solicitud.viaje.decrement("cupos_disponibles");
+  await solicitud.viaje.decrement("cuposDisponibles");
   await Participacion.create({
-    viaje_id: solicitud.viaje_id,
-    pasajero_id: solicitud.pasajero_id,
+    viajeId: solicitud.viajeId,
+    pasajeroId: solicitud.pasajeroId,
+    solicitudId: solicitud.id,
     estado: "confirmado",
   });
   return solicitud.reload();
 };
 
 exports.rechazar = async (solicitudId, usuarioId) => {
-  const conductor = await Conductor.findOne({ where: { usuario_id: usuarioId } });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) throw apiError("Perfil de conductor no encontrado.", 403);
 
   const solicitud = await Solicitud.findByPk(solicitudId, {
     include: [{ model: Viaje, as: "viaje" }],
   });
   if (!solicitud) throw apiError("Solicitud no encontrada.", 404);
-  if (solicitud.viaje.conductor_id !== conductor.id)
+  if (solicitud.viaje.conductorId !== conductor.id)
     throw apiError("Sin permiso.", 403);
   if (solicitud.estado !== "pendiente")
     throw apiError("Esta solicitud ya fue procesada.", 400);
@@ -91,11 +90,11 @@ exports.rechazar = async (solicitudId, usuarioId) => {
 };
 
 exports.pendientes = async (usuarioId) => {
-  const conductor = await Conductor.findOne({ where: { usuario_id: usuarioId } });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) return [];
 
   const viajes = await Viaje.findAll({
-    where: { conductor_id: conductor.id, estado: "publicado" },
+    where: { conductorId: conductor.id, estado: "publicado" },
     attributes: ["id"],
   });
 
@@ -104,10 +103,10 @@ exports.pendientes = async (usuarioId) => {
 
   return Solicitud.findAll({
     where: {
-      viaje_id: { [Op.in]: viajeIds },
+      viajeId: { [Op.in]: viajeIds },
       estado: "pendiente",
     },
-    order: [["fecha_envio", "ASC"]],
+    order: [["fechaEnvio", "ASC"]],
     include: [
       { model: Viaje, as: "viaje" },
       {

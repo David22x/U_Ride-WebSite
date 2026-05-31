@@ -64,10 +64,7 @@ exports.crearViaje = async (usuarioId, datos) => {
   const { Conductor, Viaje, ReglasViaje } = M();
 
   const conductor = await Conductor.findOne({
-    where: {
-      usuario_id: usuarioId,
-      activo: true,
-    },
+    where: { usuarioId, activo: true },
   });
   if (!conductor)
     throw apiError(
@@ -75,44 +72,17 @@ exports.crearViaje = async (usuarioId, datos) => {
       403,
     );
 
-  if (
-    !conductor.vehiculo ||
-    !conductor.placa ||
-    !conductor.color ||
-    !conductor.licencia
-  ) {
-    throw apiError(
-      "Completa los datos de tu vehículo antes de publicar viajes.",
-      403,
-    );
+  if (!conductor.vehiculo || !conductor.placa || !conductor.color || !conductor.licencia) {
+    throw apiError("Completa los datos de tu vehículo antes de publicar viajes.", 403);
   }
 
-  const {
-    origen,
-    destino,
-    fecha,
-    horaSalida,
-    horaLlegada,
-    cuposTotal,
-    notas,
-    reglas,
-  } = datos;
+  const { origen, destino, fecha, horaSalida, horaLlegada, cuposTotal, notas, reglas } = datos;
 
-  if (
-    !origen ||
-    !destino ||
-    !fecha ||
-    !horaSalida ||
-    !horaLlegada ||
-    !cuposTotal
-  )
+  if (!origen || !destino || !fecha || !horaSalida || !horaLlegada || !cuposTotal)
     throw apiError("Todos los campos obligatorios deben estar presentes.", 400);
 
   if (horaSalida >= horaLlegada)
-    throw apiError(
-      "La hora de llegada debe ser mayor a la hora de salida.",
-      400,
-    );
+    throw apiError("La hora de llegada debe ser mayor a la hora de salida.", 400);
 
   if (new Date(fecha) < new Date(new Date().toDateString()))
     throw apiError("La fecha del viaje no puede ser en el pasado.", 400);
@@ -136,14 +106,10 @@ exports.crearViaje = async (usuarioId, datos) => {
       { transaction: t },
     );
 
-    // RF9 — Reglas de seguridad: se guardan junto al viaje
+    // RF9 — Reglas de seguridad
     if (reglas && reglas.trim()) {
       await ReglasViaje.create(
-        {
-          viajeId: v.id,
-          descripcion: reglas.trim(),
-          obligatoria: true,
-        },
+        { viajeId: v.id, descripcion: reglas.trim(), obligatoria: true },
         { transaction: t },
       );
     }
@@ -174,7 +140,6 @@ exports.buscarViajes = async ({
   if (destino) where.destino = { [Op.like]: `%${destino.trim()}%` };
   if (hora) where.horaSalida = { [Op.gte]: hora };
 
-  // Solo viajes futuros si no se especifica fecha
   if (!fecha)
     where.fecha = { [Op.gte]: new Date().toISOString().split("T")[0] };
 
@@ -200,7 +165,6 @@ exports.buscarViajes = async ({
     ],
   });
 
-  // Agregar reputación promedio del conductor
   const seq = require("../config/database").sequelize;
   const { QueryTypes } = require("sequelize");
 
@@ -228,8 +192,7 @@ exports.buscarViajes = async ({
    RF3 — Obtener detalle de un viaje (incluye reglas RF9)
    ─────────────────────────────────────────────────────────── */
 exports.obtenerViajePorId = async (viajeId) => {
-  const { Viaje, ReglasViaje, Conductor, Usuario, Participacion, Pasajero } =
-    M();
+  const { Viaje, ReglasViaje, Conductor, Usuario, Participacion, Pasajero } = M();
 
   const viaje = await Viaje.findByPk(viajeId, {
     include: [
@@ -241,14 +204,7 @@ exports.obtenerViajePorId = async (viajeId) => {
           {
             model: Usuario,
             as: "usuario",
-            attributes: [
-              "id",
-              "nombre",
-              "apellido",
-              "foto",
-              "zona",
-              "telefono",
-            ],
+            attributes: ["id", "nombre", "apellido", "foto", "zona", "telefono"],
           },
         ],
       },
@@ -282,21 +238,9 @@ exports.obtenerViajePorId = async (viajeId) => {
    RF3 — Mis viajes publicados (conductor)
    ─────────────────────────────────────────────────────────── */
 exports.misViajesComoCondcutor = async (usuarioId) => {
-  const {
-    Viaje,
-    Conductor,
-    ReglasViaje,
-    Solicitud,
-    Participacion,
-    Pasajero,
-    Usuario,
-  } = M();
+  const { Viaje, Conductor, ReglasViaje, Solicitud, Participacion, Pasajero, Usuario } = M();
 
-  const conductor = await Conductor.findOne({
-    where: {
-      usuario_id: usuarioId,
-    },
-  });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) return [];
 
   return Viaje.findAll({
@@ -352,16 +296,12 @@ exports.misViajesComoCondcutor = async (usuarioId) => {
 exports.misViajesComoPasajero = async (usuarioId) => {
   const { Viaje, Conductor, Usuario, Participacion, Pasajero } = M();
 
-  const pasajero = await M().Pasajero.findOne({
-    where: {
-      usuario_id: usuarioId,
-    },
-  });
+  const pasajero = await M().Pasajero.findOne({ where: { usuarioId } });
   if (!pasajero) return [];
 
   return Participacion.findAll({
     where: { pasajeroId: pasajero.id },
-    order: [["createdAt", "DESC"]],
+    order: [["created_at", "DESC"]],
     include: [
       {
         model: Viaje,
@@ -390,11 +330,7 @@ exports.misViajesComoPasajero = async (usuarioId) => {
 exports.modificarViaje = async (viajeId, usuarioId, datos) => {
   const { Viaje, Conductor, Participacion } = M();
 
-  const conductor = await Conductor.findOne({
-    where: {
-      usuario_id: usuarioId,
-    },
-  });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) throw apiError("Perfil de conductor no encontrado.", 403);
 
   const viaje = await Viaje.findOne({
@@ -437,11 +373,7 @@ exports.modificarViaje = async (viajeId, usuarioId, datos) => {
 exports.cancelarViaje = async (viajeId, usuarioId) => {
   const { Viaje, Conductor } = M();
 
-  const conductor = await Conductor.findOne({
-    where: {
-      usuario_id: usuarioId,
-    },
-  });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) throw apiError("Perfil de conductor no encontrado.", 403);
 
   const viaje = await Viaje.findOne({
@@ -462,11 +394,7 @@ exports.cancelarViaje = async (viajeId, usuarioId) => {
 exports.enviarSolicitud = async (usuarioId, viajeId) => {
   const { Pasajero, Viaje, Solicitud, Conductor } = M();
 
-  const pasajero = await Pasajero.findOne({
-    where: {
-      usuario_id: usuarioId,
-    },
-  });
+  const pasajero = await Pasajero.findOne({ where: { usuarioId } });
   if (!pasajero) throw apiError("Perfil de pasajero no encontrado.", 403);
 
   const viaje = await Viaje.findByPk(viajeId, {
@@ -478,11 +406,9 @@ exports.enviarSolicitud = async (usuarioId, viajeId) => {
   if (viaje.cuposDisponibles <= 0)
     throw apiError("No hay cupos disponibles.", 400);
 
-  // No puede solicitar su propio viaje
   if (viaje.conductor?.usuarioId === usuarioId)
     throw apiError("No puedes solicitar unirte a tu propio viaje.", 400);
 
-  // Solicitud ya existente
   const yaExiste = await Solicitud.findOne({
     where: {
       pasajeroId: pasajero.id,
@@ -506,11 +432,7 @@ exports.enviarSolicitud = async (usuarioId, viajeId) => {
 exports.cancelarSolicitud = async (solicitudId, usuarioId) => {
   const { Solicitud, Pasajero } = M();
 
-  const pasajero = await Pasajero.findOne({
-    where: {
-      usuario_id: usuarioId,
-    },
-  });
+  const pasajero = await Pasajero.findOne({ where: { usuarioId } });
   if (!pasajero) throw apiError("Perfil no encontrado.", 403);
 
   const solicitud = await Solicitud.findOne({
@@ -529,11 +451,7 @@ exports.cancelarSolicitud = async (solicitudId, usuarioId) => {
 exports.aceptarSolicitud = async (solicitudId, usuarioId) => {
   const { Solicitud, Viaje, Conductor, Participacion } = M();
 
-  const conductor = await Conductor.findOne({
-    where: {
-      usuario_id: usuarioId,
-    },
-  });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) throw apiError("Perfil de conductor no encontrado.", 403);
 
   const solicitud = await Solicitud.findByPk(solicitudId, {
@@ -550,10 +468,8 @@ exports.aceptarSolicitud = async (solicitudId, usuarioId) => {
   const seq = require("../config/database").sequelize;
 
   await seq.transaction(async (t) => {
-    // RF6 — aceptar
     await solicitud.update({ estado: "aceptada" }, { transaction: t });
 
-    // RF7 — registrar participación confirmada
     await Participacion.create(
       {
         viajeId: solicitud.viajeId,
@@ -564,7 +480,6 @@ exports.aceptarSolicitud = async (solicitudId, usuarioId) => {
       { transaction: t },
     );
 
-    // Decrementar cupos (el trigger también lo hace, doble seguridad)
     await solicitud.viaje.decrement("cuposDisponibles", { transaction: t });
   });
 
@@ -577,11 +492,7 @@ exports.aceptarSolicitud = async (solicitudId, usuarioId) => {
 exports.rechazarSolicitud = async (solicitudId, usuarioId) => {
   const { Solicitud, Viaje, Conductor } = M();
 
-  const conductor = await Conductor.findOne({
-    where: {
-      usuario_id: usuarioId,
-    },
-  });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) throw apiError("Perfil de conductor no encontrado.", 403);
 
   const solicitud = await Solicitud.findByPk(solicitudId, {
@@ -602,9 +513,7 @@ exports.rechazarSolicitud = async (solicitudId, usuarioId) => {
 exports.solicitudesPendientes = async (usuarioId) => {
   const { Solicitud, Viaje, Conductor, Pasajero, Usuario } = M();
 
-  const conductor = await Conductor.findOne({
-    where: { usuario_id: usuarioId },
-  });
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) return [];
 
   const viajes = await Viaje.findAll({

@@ -9,7 +9,12 @@ module.exports = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    viaje_id: { type: DataTypes.UUID, allowNull: false, unique: true },
+    viajeId: {
+      type: DataTypes.UUID,
+      field: "viaje_id",
+      allowNull: false,
+      unique: true,
+    },
     descripcion: { type: DataTypes.TEXT, allowNull: true },
     obligatoria: { type: DataTypes.BOOLEAN, defaultValue: true },
   },

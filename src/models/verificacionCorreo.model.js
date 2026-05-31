@@ -9,30 +9,27 @@ module.exports = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-
-    usuario_id: {
+    usuarioId: {
       type: DataTypes.UUID,
+      field: "usuario_id",
       allowNull: false,
     },
-
     codigo: {
       type: DataTypes.STRING(6),
       allowNull: false,
     },
-
     tipo: {
       type: DataTypes.ENUM("registro", "recuperacion"),
       allowNull: false,
       defaultValue: "registro",
     },
-
     usado: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-
-    expira_en: {
+    expiraEn: {
       type: DataTypes.DATE,
+      field: "expira_en",
       allowNull: false,
     },
   },

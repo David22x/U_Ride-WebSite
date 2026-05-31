@@ -18,144 +18,151 @@ const RegistroPendiente = require("./registroPendiente.model");
 
 /* Usuario ↔ Conductor */
 Usuario.hasOne(Conductor, {
-  foreignKey: "usuario_id",
+  foreignKey: "usuarioId",
   as: "perfilConductor",
 });
 
 Conductor.belongsTo(Usuario, {
-  foreignKey: "usuario_id",
+  foreignKey: "usuarioId",
   as: "usuario",
 });
 
 /* Usuario ↔ Pasajero */
 Usuario.hasOne(Pasajero, {
-  foreignKey: "usuario_id",
+  foreignKey: "usuarioId",
   as: "perfilPasajero",
 });
 
 Pasajero.belongsTo(Usuario, {
-  foreignKey: "usuario_id",
+  foreignKey: "usuarioId",
   as: "usuario",
 });
 
 /* Conductor ↔ Viaje */
 Conductor.hasMany(Viaje, {
-  foreignKey: "conductor_id",
+  foreignKey: "conductorId",
   as: "viajes",
 });
 
 Viaje.belongsTo(Conductor, {
-  foreignKey: "conductor_id",
+  foreignKey: "conductorId",
   as: "conductor",
 });
 
 /* Viaje ↔ Reglas */
 Viaje.hasOne(ReglasViaje, {
-  foreignKey: "viaje_id",
+  foreignKey: "viajeId",
   as: "reglas",
 });
 
 ReglasViaje.belongsTo(Viaje, {
-  foreignKey: "viaje_id",
+  foreignKey: "viajeId",
   as: "viaje",
 });
 
 /* Viaje ↔ Solicitudes */
 Viaje.hasMany(Solicitud, {
-  foreignKey: "viaje_id",
+  foreignKey: "viajeId",
   as: "solicitudes",
 });
 
 Solicitud.belongsTo(Viaje, {
-  foreignKey: "viaje_id",
+  foreignKey: "viajeId",
   as: "viaje",
 });
 
 /* Pasajero ↔ Solicitudes */
 Pasajero.hasMany(Solicitud, {
-  foreignKey: "pasajero_id",
+  foreignKey: "pasajeroId",
   as: "solicitudes",
 });
 
 Solicitud.belongsTo(Pasajero, {
-  foreignKey: "pasajero_id",
+  foreignKey: "pasajeroId",
   as: "pasajero",
 });
 
 /* Viaje ↔ Participaciones */
 Viaje.hasMany(Participacion, {
-  foreignKey: "viaje_id",
+  foreignKey: "viajeId",
   as: "participantes",
 });
 
 Participacion.belongsTo(Viaje, {
-  foreignKey: "viaje_id",
+  foreignKey: "viajeId",
   as: "viaje",
 });
 
 /* Pasajero ↔ Participaciones */
-
 Pasajero.hasMany(Participacion, {
-  foreignKey: "pasajero_id",
+  foreignKey: "pasajeroId",
   as: "participaciones",
 });
 
 Participacion.belongsTo(Pasajero, {
-  foreignKey: "pasajero_id",
+  foreignKey: "pasajeroId",
   as: "pasajero",
 });
 
 /* Usuario ↔ Calificaciones */
 Usuario.hasMany(Calificacion, {
-  foreignKey: "evaluador_id",
+  foreignKey: "evaluadorId",
   as: "calificacionesHechas",
 });
 
 Usuario.hasMany(Calificacion, {
-  foreignKey: "evaluado_id",
+  foreignKey: "evaluadoId",
   as: "calificacionesRecibidas",
 });
 
 Calificacion.belongsTo(Usuario, {
-  foreignKey: "evaluador_id",
+  foreignKey: "evaluadorId",
   as: "evaluador",
 });
 
 Calificacion.belongsTo(Usuario, {
-  foreignKey: "evaluado_id",
+  foreignKey: "evaluadoId",
   as: "evaluado",
 });
 
 /* Usuario ↔ Reseñas */
 Usuario.hasMany(Resena, {
-  foreignKey: "autor_id",
+  foreignKey: "autorId",
   as: "resenasHechas",
 });
 
 Resena.belongsTo(Usuario, {
-  foreignKey: "autor_id",
+  foreignKey: "autorId",
   as: "autor",
 });
 
 /* Usuario ↔ Reportes */
 Usuario.hasMany(Reporte, {
-  foreignKey: "reportante_id",
+  foreignKey: "reportanteId",
   as: "reportesHechos",
 });
 
 Reporte.belongsTo(Usuario, {
-  foreignKey: "reportante_id",
+  foreignKey: "reportanteId",
   as: "reportante",
 });
 
+/* Reporte ↔ AccionAdministrativa */
+Reporte.hasMany(AccionAdministrativa, { foreignKey: "reporteId", as: "acciones" });
+AccionAdministrativa.belongsTo(Reporte, { foreignKey: "reporteId", as: "reporte" });
+
+/* AccionAdministrativa ↔ Usuario (admin) */
+Usuario.hasMany(AccionAdministrativa, { foreignKey: "adminId", as: "accionesHechas" });
+AccionAdministrativa.belongsTo(Usuario, { foreignKey: "adminId", as: "admin" });
+
 /* Usuario ↔ Verificaciones */
 Usuario.hasMany(VerificacionCorreo, {
-  foreignKey: "usuario_id",
+  foreignKey: "usuarioId",
   as: "verificaciones",
 });
 
 VerificacionCorreo.belongsTo(Usuario, {
-  foreignKey: "usuario_id",
+  foreignKey: "usuarioId",
   as: "usuario",
 });
 
