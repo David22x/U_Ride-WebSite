@@ -1,4 +1,11 @@
-const { Solicitud, Viaje, Participacion, Pasajero, Conductor, Usuario } = require("../models");
+const {
+  Solicitud,
+  Viaje,
+  Participacion,
+  Pasajero,
+  Conductor,
+  Usuario,
+} = require("../models");
 const { Op } = require("sequelize");
 
 function apiError(msg, status = 400) {
@@ -48,28 +55,81 @@ exports.crear = async (usuarioId, viajeId) => {
 };
 
 exports.aceptar = async (solicitudId, usuarioId) => {
-  const conductor = await Conductor.findOne({ where: { usuarioId } });
+  console.log("ACEPTAR SOLICITUD:", solicitudId);
+
+  const conductor = await Conductor.findOne({
+    where: { usuarioId },
+  });
+
   if (!conductor) throw apiError("Perfil de conductor no encontrado.", 403);
 
   const solicitud = await Solicitud.findByPk(solicitudId, {
     include: [{ model: Viaje, as: "viaje" }],
   });
+
   if (!solicitud) throw apiError("Solicitud no encontrada.", 404);
+
   if (solicitud.viaje.conductorId !== conductor.id)
     throw apiError("Sin permiso.", 403);
+
   if (solicitud.estado !== "pendiente")
     throw apiError("Esta solicitud ya fue procesada.", 400);
+
   if (solicitud.viaje.cuposDisponibles <= 0)
     throw apiError("Sin cupos disponibles.", 400);
 
-  await solicitud.update({ estado: "aceptada" });
-  await solicitud.viaje.decrement("cuposDisponibles");
+  const viajeActual = await Viaje.findByPk(solicitud.viajeId);
+
+  console.log(
+    "ANTES DEL DECREMENT:",
+    viajeActual.id,
+    viajeActual.cuposDisponibles,
+  );
+
+  console.log("PASO 1");
+  await solicitud.update({
+    estado: "aceptada",
+  });
+
+  console.log("PASO 2");
+
+  //await viajeActual.decrement("cuposDisponibles");
+  const nuevoValor = Number(viajeActual.cuposDisponibles) - 1;
+
+  console.log("TIPO:", typeof viajeActual.cuposDisponibles);
+  console.log("VALOR ACTUAL:", viajeActual.cuposDisponibles);
+  console.log("NUEVO VALOR:", nuevoValor);
+
+  await Viaje.update(
+    {
+      cuposDisponibles: nuevoValor,
+    },
+    {
+      where: {
+        id: viajeActual.id,
+      },
+    },
+  );
+
+  await viajeActual.reload();
+
+  console.log(
+    "DESPUES DEL DECREMENT:",
+    viajeActual.id,
+    viajeActual.cuposDisponibles,
+  );
+
+  console.log("PASO 3");
+
   await Participacion.create({
     viajeId: solicitud.viajeId,
     pasajeroId: solicitud.pasajeroId,
     solicitudId: solicitud.id,
     estado: "confirmado",
   });
+
+  console.log("PASO 4");
+
   return solicitud.reload();
 };
 
