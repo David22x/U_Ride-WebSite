@@ -10,7 +10,7 @@
 /* ── Elementos del DOM ─────────────────────────────────── */
 const stepCorreo = document.getElementById("stepCorreo");
 const stepCodigo = document.getElementById("stepCodigo");
-const stepNuevaPass = document.getElementById("stepNuevaPass");
+const stepPassword = document.getElementById("stepPassword");
 const stepExito = document.getElementById("stepExito");
 
 // Paso 1
@@ -21,24 +21,24 @@ const btnEnviar = document.getElementById("btnEnviar");
 
 // Paso 2
 const correoDisplay = document.getElementById("correoDisplay");
-const otpInputs = Array.from(document.querySelectorAll(".otpInput"));
+const otpInputs = Array.from(document.querySelectorAll(".otp-input"));
 const alertCodigo = document.getElementById("alertCodigo");
 const btnVerificar = document.getElementById("btnVerificar");
-const timerText = document.getElementById("timerText");
+const timerTxt = document.getElementById("timerTxt");
 const countdown = document.getElementById("countdown");
 const btnReenviar = document.getElementById("btnReenviar");
 const btnCambiarCorreo = document.getElementById("btnCambiarCorreo");
 
 // Paso 3
-const formNuevaPass = document.getElementById("formNuevaPass");
-const nuevaPassInput = document.getElementById("nuevaPass");
-const confirmarInput = document.getElementById("confirmarPass");
-const alertNuevaPass = document.getElementById("alertNuevaPass");
+const formPassword = document.getElementById("formPassword");
+const nuevaPassInput = document.getElementById("nuevaContrasena");
+const confirmarInput = document.getElementById("confirmarContrasena");
+const alertPassword = document.getElementById("alertPassword");
 const btnCambiar = document.getElementById("btnCambiar");
 
 // Medidor de fortaleza
-const bars = [1, 2, 3, 4].map((n) => document.getElementById(`bar${n}`));
-const passLabel = document.getElementById("passLabel");
+const bars = [];
+const passLabel = { textContent: "" };
 
 let correoGuardado = "";
 let codigoValidado = ""; // código ya verificado, se envía en paso 3
@@ -46,7 +46,7 @@ let timerInterval = null;
 
 /* ── Helpers ───────────────────────────────────────────── */
 function irAPaso(paso) {
-  [stepCorreo, stepCodigo, stepNuevaPass, stepExito].forEach((p) =>
+  [stepCorreo, stepCodigo, stepPassword, stepExito].forEach((p) =>
     p.classList.add("hidden"),
   );
   paso.classList.remove("hidden");
@@ -113,8 +113,8 @@ nuevaPassInput?.addEventListener("input", () => {
     : "Ingresa una contraseña";
 
   // Limpiar error al escribir
-  hideAlert(alertNuevaPass);
-  setFieldError(nuevaPassInput, "errNuevaPass", "");
+  hideAlert(alertPassword);
+  setFieldError(nuevaPassInput, "errNueva", "");
 });
 
 confirmarInput?.addEventListener("input", () => {
@@ -283,7 +283,7 @@ async function verificarCodigo() {
     // Guardamos el código para enviarlo en el paso 3
     codigoValidado = codigo;
     clearInterval(timerInterval);
-    irAPaso(stepNuevaPass);
+    irAPaso(stepPassword);
     nuevaPassInput.focus();
   } catch {
     showAlert(alertCodigo, "Sin conexión. Verifica tu internet.", "error");
@@ -297,7 +297,7 @@ btnVerificar.addEventListener("click", verificarCodigo);
 /* ── Timer de reenvío ──────────────────────────────────── */
 function iniciarTimer(segundos) {
   clearInterval(timerInterval);
-  timerText.hidden = false;
+  timerTxt.hidden = false;
   btnReenviar.classList.add("hidden");
 
   let restantes = segundos;
@@ -310,7 +310,7 @@ function iniciarTimer(segundos) {
     countdown.textContent = `${m}:${s}`;
     if (restantes <= 0) {
       clearInterval(timerInterval);
-      timerText.hidden = true;
+      timerTxt.hidden = true;
       btnReenviar.classList.remove("hidden");
     }
     restantes--;
@@ -359,31 +359,31 @@ btnCambiarCorreo.addEventListener("click", () => {
 /* ════════════════════════════════════════════════════════
    PASO 3 — Nueva contraseña
    ════════════════════════════════════════════════════════ */
-formNuevaPass.addEventListener("submit", async (e) => {
+formPassword.addEventListener("submit", async (e) => {
   e.preventDefault();
-  hideAlert(alertNuevaPass);
+  hideAlert(alertPassword);
 
-  const nuevaPass = nuevaPassInput.value;
+  const nuevaContrasena = nuevaPassInput.value;
   const confirmar = confirmarInput.value;
   let valid = true;
 
   // Validar fortaleza
-  if (nuevaPass.length < 8) {
-    setFieldError(nuevaPassInput, "errNuevaPass", "Mínimo 8 caracteres.");
+  if (nuevaContrasena.length < 8) {
+    setFieldError(nuevaPassInput, "errNueva", "Mínimo 8 caracteres.");
     valid = false;
-  } else if (evaluarPass(nuevaPass) < 2) {
+  } else if (evaluarPass(nuevaContrasena) < 2) {
     setFieldError(
       nuevaPassInput,
-      "errNuevaPass",
+      "errNueva",
       "La contraseña es demasiado débil.",
     );
     valid = false;
   } else {
-    setFieldError(nuevaPassInput, "errNuevaPass", "");
+    setFieldError(nuevaPassInput, "errNueva", "");
   }
 
   // Validar coincidencia
-  if (nuevaPass !== confirmar) {
+  if (nuevaContrasena !== confirmar) {
     setFieldError(
       confirmarInput,
       "errConfirmar",
@@ -405,7 +405,7 @@ formNuevaPass.addEventListener("submit", async (e) => {
       body: JSON.stringify({
         correo: correoGuardado,
         codigo: codigoValidado,
-        nuevaContrasena: nuevaPass,
+        nuevaContrasena: nuevaContrasena,
       }),
     });
 
@@ -413,7 +413,7 @@ formNuevaPass.addEventListener("submit", async (e) => {
 
     if (!res.ok) {
       showAlert(
-        alertNuevaPass,
+        alertPassword,
         json.error || "Error al cambiar la contraseña.",
         "error",
       );
@@ -422,7 +422,7 @@ formNuevaPass.addEventListener("submit", async (e) => {
 
     irAPaso(stepExito);
   } catch {
-    showAlert(alertNuevaPass, "Sin conexión. Verifica tu internet.", "error");
+    showAlert(alertPassword, "Sin conexión. Verifica tu internet.", "error");
   } finally {
     setLoading(btnCambiar, false);
   }

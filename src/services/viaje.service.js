@@ -72,17 +72,48 @@ exports.crearViaje = async (usuarioId, datos) => {
       403,
     );
 
-  if (!conductor.vehiculo || !conductor.placa || !conductor.color || !conductor.licencia) {
-    throw apiError("Completa los datos de tu vehículo antes de publicar viajes.", 403);
+  if (
+    !conductor.vehiculo ||
+    !conductor.placa ||
+    !conductor.color ||
+    !conductor.licencia
+  ) {
+    throw apiError(
+      "Completa los datos de tu vehículo antes de publicar viajes.",
+      403,
+    );
   }
 
-  const { origen, destino, fecha, horaSalida, horaLlegada, cuposTotal, notas, reglas } = datos;
+  const {
+    origen,
+    destino,
+    origenLat, // ← NUEVO
+    origenLng, // ← NUEVO
+    destinoLat, // ← NUEVO
+    destinoLng, // ← NUEVO
+    fecha,
+    horaSalida,
+    horaLlegada,
+    cuposTotal,
+    notas,
+    reglas,
+  } = datos;
 
-  if (!origen || !destino || !fecha || !horaSalida || !horaLlegada || !cuposTotal)
+  if (
+    !origen ||
+    !destino ||
+    !fecha ||
+    !horaSalida ||
+    !horaLlegada ||
+    !cuposTotal
+  )
     throw apiError("Todos los campos obligatorios deben estar presentes.", 400);
 
   if (horaSalida >= horaLlegada)
-    throw apiError("La hora de llegada debe ser mayor a la hora de salida.", 400);
+    throw apiError(
+      "La hora de llegada debe ser mayor a la hora de salida.",
+      400,
+    );
 
   if (new Date(fecha) < new Date(new Date().toDateString()))
     throw apiError("La fecha del viaje no puede ser en el pasado.", 400);
@@ -95,6 +126,10 @@ exports.crearViaje = async (usuarioId, datos) => {
         conductorId: conductor.id,
         origen: origen.trim(),
         destino: destino.trim(),
+        origenLat: origenLat ? parseFloat(origenLat) : null, // ← NUEVO
+        origenLng: origenLng ? parseFloat(origenLng) : null, // ← NUEVO
+        destinoLat: destinoLat ? parseFloat(destinoLat) : null, // ← NUEVO
+        destinoLng: destinoLng ? parseFloat(destinoLng) : null, // ← NUEVO
         fecha,
         horaSalida,
         horaLlegada,
@@ -192,7 +227,8 @@ exports.buscarViajes = async ({
    RF3 — Obtener detalle de un viaje (incluye reglas RF9)
    ─────────────────────────────────────────────────────────── */
 exports.obtenerViajePorId = async (viajeId) => {
-  const { Viaje, ReglasViaje, Conductor, Usuario, Participacion, Pasajero } = M();
+  const { Viaje, ReglasViaje, Conductor, Usuario, Participacion, Pasajero } =
+    M();
 
   const viaje = await Viaje.findByPk(viajeId, {
     include: [
@@ -204,7 +240,14 @@ exports.obtenerViajePorId = async (viajeId) => {
           {
             model: Usuario,
             as: "usuario",
-            attributes: ["id", "nombre", "apellido", "foto", "zona", "telefono"],
+            attributes: [
+              "id",
+              "nombre",
+              "apellido",
+              "foto",
+              "zona",
+              "telefono",
+            ],
           },
         ],
       },
@@ -238,7 +281,15 @@ exports.obtenerViajePorId = async (viajeId) => {
    RF3 — Mis viajes publicados (conductor)
    ─────────────────────────────────────────────────────────── */
 exports.misViajesComoCondcutor = async (usuarioId) => {
-  const { Viaje, Conductor, ReglasViaje, Solicitud, Participacion, Pasajero, Usuario } = M();
+  const {
+    Viaje,
+    Conductor,
+    ReglasViaje,
+    Solicitud,
+    Participacion,
+    Pasajero,
+    Usuario,
+  } = M();
 
   const conductor = await Conductor.findOne({ where: { usuarioId } });
   if (!conductor) return [];
@@ -349,6 +400,10 @@ exports.modificarViaje = async (viajeId, usuarioId, datos) => {
   const permitidos = [
     "origen",
     "destino",
+    "origenLat", // ← NUEVO
+    "origenLng", // ← NUEVO
+    "destinoLat", // ← NUEVO
+    "destinoLng", // ← NUEVO
     "fecha",
     "horaSalida",
     "horaLlegada",
@@ -542,4 +597,80 @@ exports.solicitudesPendientes = async (usuarioId) => {
       },
     ],
   });
+};
+
+exports.iniciarViaje = async (viajeId, usuarioId) => {
+  const { Viaje, Conductor } = M();
+
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
+  if (!conductor) throw apiError("Perfil de conductor no encontrado.", 403);
+
+  const viaje = await Viaje.findOne({
+    where: { id: viajeId, conductorId: conductor.id },
+  });
+
+  if (!viaje) throw apiError("Viaje no encontrado o sin permiso.", 404);
+  if (viaje.estado !== "publicado")
+    throw apiError(
+      viaje.estado === "en_curso"
+        ? "El viaje ya está en curso."
+        : viaje.estado === "finalizado"
+          ? "El viaje ya fue finalizado."
+          : "No puedes iniciar un viaje cancelado.",
+      400,
+    );
+
+  return viaje.update({ estado: "en_curso" });
+};
+
+exports.finalizarViaje = async (viajeId, usuarioId) => {
+  const { Viaje, Conductor, Participacion, Pasajero, Usuario } = M();
+
+  const conductor = await Conductor.findOne({ where: { usuarioId } });
+  if (!conductor) throw apiError("Perfil de conductor no encontrado.", 403);
+
+  const viaje = await Viaje.findOne({
+    where: { id: viajeId, conductorId: conductor.id },
+  });
+
+  if (!viaje) throw apiError("Viaje no encontrado o sin permiso.", 404);
+  if (viaje.estado !== "en_curso")
+    throw apiError(
+      viaje.estado === "publicado"
+        ? "Debes iniciar el viaje antes de finalizarlo."
+        : viaje.estado === "finalizado"
+          ? "El viaje ya fue finalizado."
+          : "No puedes finalizar un viaje cancelado.",
+      400,
+    );
+
+  await viaje.update({ estado: "finalizado" });
+
+  // Devolver participantes para disparar flujo de calificación en el frontend
+  const participantes = await Participacion.findAll({
+    where: { viajeId, estado: "confirmado" },
+    include: [
+      {
+        model: Pasajero,
+        as: "pasajero",
+        include: [
+          {
+            model: Usuario,
+            as: "usuario",
+            attributes: ["id", "nombre", "apellido"],
+          },
+        ],
+      },
+    ],
+  });
+
+  return {
+    viaje: await viaje.reload(),
+    participantes: participantes.map((p) => ({
+      id: p.id,
+      usuarioId: p.pasajero?.usuario?.id,
+      nombre:
+        `${p.pasajero?.usuario?.nombre || ""} ${p.pasajero?.usuario?.apellido || ""}`.trim(),
+    })),
+  };
 };

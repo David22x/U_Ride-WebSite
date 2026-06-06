@@ -1,0 +1,259 @@
+/* ══════════════════════════════════════════════════════
+   U-Ride — maps.css  (v2)
+   Estilos para mapas, selector de puntos, panel de
+   tracking en vivo y tarjeta de "Viaje actual" en el home.
+   ══════════════════════════════════════════════════════ */
+
+/* ── Contenedor base ───────────────────────────────── */
+.map-container {
+  width: 100%;
+  height: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a1b23;
+  border: 1px solid var(--border, #2d2f3e);
+  position: relative;
+}
+.map-container.map-lg  { height: 360px; }
+.map-container.map-sm  { height: 180px; }
+.map-container.map-picker { height: 300px; cursor: crosshair; }
+
+/* Skeleton hasta que el mapa inicialice */
+.map-container:not(.map-ready)::before {
+  content: "🗺 Cargando mapa…";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .85rem;
+  color: #6b7280;
+  background: #1a1b23;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Selector de puntos ──────────────────────────── */
+.map-picker-wrap {
+  margin-top: .6rem;
+}
+
+.map-picker-label {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--text-sub, #9ca3af);
+  margin-bottom: .4rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.map-picker-label .dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-origen  { background: #6366f1; }
+.dot-destino { background: #10b981; }
+
+/* Instrucción sobre el mapa */
+.map-hint {
+  position: absolute;
+  top: 8px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10,10,15,.82);
+  color: #e2e4f0;
+  font-size: .78rem;
+  padding: .3rem .8rem;
+  border-radius: 99px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+/* Dirección detectada bajo el mapa */
+.map-detected-address {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .45rem;
+  padding: .4rem .7rem;
+  border-radius: 8px;
+  background: var(--surface2, #1e1f2b);
+  border: 1px solid var(--border, #2d2f3e);
+  font-size: .82rem;
+  color: var(--text, #e2e4f0);
+  min-height: 34px;
+}
+.map-detected-address .addr-icon { flex-shrink: 0; }
+.map-detected-address .addr-text { flex: 1; color: var(--text-sub, #9ca3af); }
+.map-detected-address.filled .addr-text { color: var(--text, #e2e4f0); }
+
+/* Botón cambiar punto */
+.btn-change-point {
+  font-size: .76rem;
+  color: #6366f1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+  flex-shrink: 0;
+}
+.btn-change-point:hover { opacity: .7; }
+
+/* ── Panel de tracking en tiempo real ─────────────── */
+.tracking-panel {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem .9rem;
+  background: rgba(99,102,241,.08);
+  border: 1px solid rgba(99,102,241,.22);
+  border-radius: 10px;
+  margin-top: .65rem;
+  font-size: .83rem;
+  color: var(--text, #e2e4f0);
+}
+
+.tracking-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #10b981;
+  flex-shrink: 0;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+.tracking-dot.offline {
+  background: #6b7280;
+  animation: none;
+}
+@keyframes pulse-dot {
+  0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,.6); }
+  50%      { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+}
+
+.tracking-label { flex: 1; line-height: 1.4; }
+.tracking-label strong { display: block; font-weight: 600; }
+.tracking-label small  { color: var(--text-sub, #9ca3af); }
+
+/* ── Toggle mostrar/ocultar mapa ───────────────────── */
+.map-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .8rem;
+  color: var(--accent, #6366f1);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: .2rem 0;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.map-toggle-btn:hover { opacity: .75; }
+
+/* ── Botones de acción sobre el mapa ───────────────── */
+.map-actions { display: flex; gap: .5rem; margin-top: .5rem; flex-wrap: wrap; }
+
+.btn-map {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .42rem .85rem;
+  border-radius: 8px; font-size: .82rem; font-weight: 600;
+  cursor: pointer; border: 1px solid transparent;
+  transition: background .15s, opacity .15s;
+}
+.btn-map-primary  { background: #6366f1; color: #fff; }
+.btn-map-primary:hover  { background: #4f52d9; }
+.btn-map-ghost    { background: transparent; border-color: var(--border,#2d2f3e); color: var(--text,#e2e4f0); }
+.btn-map-ghost:hover    { background: var(--surface2,#2d2f3e); }
+.btn-map-danger   { background: #ef4444; color: #fff; }
+.btn-map-danger:hover   { background: #dc2626; }
+.btn-map:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ══════════════════════════════════════════════════════
+   TARJETA "VIAJE ACTUAL" en el Home
+   ══════════════════════════════════════════════════════ */
+
+.viaje-actual-section {
+  margin-bottom: 1.5rem;
+}
+
+.viaje-actual-card {
+  background: linear-gradient(135deg, rgba(99,102,241,.12) 0%, rgba(16,185,129,.06) 100%);
+  border: 1px solid rgba(99,102,241,.3);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.vac-header {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .9rem 1rem .5rem;
+}
+
+.vac-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .25rem .65rem;
+  border-radius: 99px;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.vac-badge.en-curso   { background: rgba(16,185,129,.15); color: #10b981; border: 1px solid rgba(16,185,129,.3); }
+.vac-badge.confirmado { background: rgba(99,102,241,.15); color: #818cf8; border: 1px solid rgba(99,102,241,.3); }
+
+.vac-ruta {
+  flex: 1;
+  font-size: .97rem;
+  font-weight: 700;
+  color: var(--text, #e2e4f0);
+}
+
+.vac-body {
+  padding: 0 1rem .5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .3rem .8rem;
+}
+
+.vac-row {
+  display: flex;
+  align-items: baseline;
+  gap: .35rem;
+  font-size: .82rem;
+}
+.vac-row span:first-child { color: var(--text-sub, #9ca3af); min-width: 60px; }
+.vac-row span:last-child  { color: var(--text, #e2e4f0); font-weight: 500; }
+
+.vac-map-wrap {
+  padding: 0 .75rem .75rem;
+}
+
+.vac-map-wrap .map-container {
+  height: 210px;
+  margin-top: 0;
+}
+
+.vac-actions {
+  padding: .5rem .75rem .75rem;
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 600px) {
+  .map-container       { height: 200px; }
+  .map-container.map-lg { height: 260px; }
+  .map-container.map-picker { height: 240px; }
+  .vac-body            { grid-template-columns: 1fr; }
+  .vac-map-wrap .map-container { height: 180px; }
+}

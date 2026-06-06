@@ -4,116 +4,189 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>U-Ride — Crear cuenta</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/auth.css"/>
+  <link rel="stylesheet" href="/css/auth.css"/>
 </head>
 <body>
 
-  <header class="barra-registro">
-    <a href="/index.html" class="logo">U-RIDE</a>
-    <div class="titulo-registro">CREAR CUENTA</div>
-  </header>
+  <div class="bg-noise"></div>
+  <div class="bg-glow"></div>
+  <div class="bg-glow2"></div>
 
-  <main class="contenedor-formulario">
+  <main class="auth-shell">
 
-    <section class="tarjeta-formulario form-card" id="step-registro">
-
-      <form id="form-registro" novalidate>
-
-        <label for="nombre">Nombres</label>
-        <input type="text" id="nombre" name="nombre" autocomplete="given-name">
-        <span class="field-error" id="err-nombre"></span>
-
-        <label for="apellido">Apellidos</label>
-        <input type="text" id="apellido" name="apellido" autocomplete="family-name">
-        <span class="field-error" id="err-apellido"></span>
-
-        <label for="correo">Correo institucional</label>
-        <input type="email" id="correo" name="correo" autocomplete="email">
-        <span class="field-error" id="err-correo"></span>
-
-        <label for="carrera">Carrera</label>
-        <select id="carrera" name="carrera">
-          <option value="">Selecciona tu carrera</option>
-          <option>Ingeniería en Software</option>
-          <option>Ingeniería en Sistemas</option>
-          <option>Ingeniería Industrial</option>
-          <option>Ingeniería Electrónica</option>
-          <option>Medicina</option>
-          <option>Derecho</option>
-          <option>Administración de Empresas</option>
-          <option>Otra</option>
-        </select>
-        <span class="field-error" id="err-carrera"></span>
-
-        <label for="zona">Zona / Barrio</label>
-        <input type="text" id="zona" name="zona">
-
-        <label for="contrasena">Contraseña</label>
-        <input type="password" id="contrasena" name="contrasena">
-        <div class="passStrengthWrap">
-          <div class="bar" id="bar-1"></div>
-          <div class="bar" id="bar-2"></div>
-          <div class="bar" id="bar-3"></div>
-          <div class="bar" id="bar-4"></div>
-          <span class="passLabel" id="passLabel">Ingresa una contraseña</span>
+    <!-- Branding compacta -->
+    <aside class="brand-panel">
+      <div class="brand-inner">
+        <div class="logo-mark">
+          <div class="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3" stroke="#0c0d10" stroke-width="2.2" stroke-linecap="round"/>
+              <rect x="9" y="11" width="14" height="10" rx="2" stroke="#0c0d10" stroke-width="2.2"/>
+              <circle cx="12" cy="21" r="1.5" fill="#0c0d10"/>
+              <circle cx="20" cy="21" r="1.5" fill="#0c0d10"/>
+            </svg>
+          </div>
+          <span class="logo-text">U-Ride</span>
         </div>
-        <span class="field-error" id="err-contrasena"></span>
-
-        <label for="confirmar">Confirmar contraseña</label>
-        <input type="password" id="confirmar" name="confirmar">
-        <span class="field-error" id="err-confirmar"></span>
-
-        <div class="alert" id="alert-registro" role="alert" aria-live="polite"></div>
-
-        <button type="submit" class="btn-primary" id="btn-registro">
-          <span class="btn-text">Crear</span>
-          <span class="btn-spinner" hidden></span>
-        </button>
-
-        <p class="form-footer">¿Ya tienes cuenta? <a href="/login.html">Inicia sesión</a></p>
-
-      </form>
-
-    </section>
-
-    <section class="tarjeta-formulario form-card hidden" id="step-verificacion">
-      <h2 class="form-title">Código de verificación</h2>
-      <p class="form-subtitle">Ingresa el código enviado a <strong id="correo-display"></strong></p>
-
-      <div class="otp-grid" id="otp-grid">
-        <input class="otp-input" type="text" maxlength="1">
-        <input class="otp-input" type="text" maxlength="1">
-        <input class="otp-input" type="text" maxlength="1">
-        <input class="otp-input" type="text" maxlength="1">
-        <input class="otp-input" type="text" maxlength="1">
-        <input class="otp-input" type="text" maxlength="1">
+        <h1 class="brand-headline">Únete a la<br/>comunidad <em>UTA</em></h1>
+        <p class="brand-sub">Crea tu cuenta con tu correo institucional y empieza a compartir viajes de forma segura.</p>
+        <div class="brand-pills">
+          <div class="brand-pill"><div class="brand-pill-dot"></div> Solo correos @uta.edu.ec</div>
+          <div class="brand-pill"><div class="brand-pill-dot"></div> Verificación por código OTP</div>
+          <div class="brand-pill"><div class="brand-pill-dot"></div> Actúa como pasajero y conductor</div>
+        </div>
       </div>
+    </aside>
 
-      <div class="alert" id="alert-verificacion" role="alert" aria-live="polite"></div>
+    <!-- Formulario -->
+    <section class="form-panel register-panel">
+      <div class="form-card">
 
-      <button type="button" class="btn-primary" id="btn-verificar">
-        <span class="btn-text">Verificar</span>
-        <span class="btn-spinner" hidden></span>
-      </button>
+        <!-- PASO 1: Registro -->
+        <div id="step-registro">
+          <a href="/login.html" class="back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Volver a iniciar sesión
+          </a>
+          <h2 class="form-title">Crear cuenta</h2>
+          <p class="form-subtitle">Completa tus datos para registrarte</p>
 
-      <div class="resend-row">
-        <span id="timer-text">Reenviar código en <strong id="countdown">15:00</strong></span>
-        <button type="button" class="btn-link hidden" id="btn-reenviar">Reenviar código</button>
+          <form id="form-registro" novalidate>
+            <div class="row-2">
+              <div class="field-group">
+                <label>Nombres</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ej: María" autocomplete="given-name"/>
+                <span class="field-error" id="err-nombre"></span>
+              </div>
+              <div class="field-group">
+                <label>Apellidos</label>
+                <input type="text" id="apellido" name="apellido" placeholder="Ej: González" autocomplete="family-name"/>
+                <span class="field-error" id="err-apellido"></span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label>Correo institucional</label>
+              <div class="input-wrap">
+                <svg class="input-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 8l10 6 10-6"/></svg>
+                <input type="email" id="correo" name="correo" class="has-icon" placeholder="nombre@uta.edu.ec" autocomplete="email"/>
+              </div>
+              <span class="field-error" id="err-correo"></span>
+            </div>
+
+            <div class="row-2">
+              <div class="field-group">
+                <label>Carrera</label>
+                <select id="carrera" name="carrera">
+                  <option value="">Selecciona</option>
+                  <option>Ingeniería en Software</option>
+                  <option>Ingeniería en Sistemas</option>
+                  <option>Ingeniería Industrial</option>
+                  <option>Ingeniería Electrónica</option>
+                  <option>Medicina</option>
+                  <option>Derecho</option>
+                  <option>Administración de Empresas</option>
+                  <option>Otra</option>
+                </select>
+                <span class="field-error" id="err-carrera"></span>
+              </div>
+              <div class="field-group">
+                <label>Zona / Barrio</label>
+                <input type="text" id="zona" name="zona" placeholder="Ej: Cdla. España"/>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label>Contraseña</label>
+              <div class="input-wrap">
+                <svg class="input-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="contrasena" name="contrasena" class="has-icon" placeholder="Mínimo 8 caracteres"/>
+                <button type="button" class="toggle-pass" data-target="contrasena" aria-label="Ver contraseña">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <div class="pass-strength">
+                <div class="pass-bars">
+                  <div class="pass-bar" id="bar-1"></div>
+                  <div class="pass-bar" id="bar-2"></div>
+                  <div class="pass-bar" id="bar-3"></div>
+                  <div class="pass-bar" id="bar-4"></div>
+                </div>
+                <span class="pass-label" id="passLabel">Ingresa una contraseña</span>
+              </div>
+              <span class="field-error" id="err-contrasena"></span>
+            </div>
+
+            <div class="field-group">
+              <label>Confirmar contraseña</label>
+              <div class="input-wrap">
+                <svg class="input-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="confirmar" name="confirmar" class="has-icon" placeholder="Repite tu contraseña"/>
+                <button type="button" class="toggle-pass" data-target="confirmar" aria-label="Ver contraseña">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <span class="field-error" id="err-confirmar"></span>
+            </div>
+
+            <div class="alert" id="alert-registro" role="alert"></div>
+
+            <button type="submit" class="btn-primary" id="btn-registro">
+              <span class="btn-text">Continuar</span>
+              <span class="btn-spinner hidden">
+                <svg width="18" height="18" viewBox="0 0 24 24" class="spin" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31" stroke-dashoffset="10"/></svg>
+              </span>
+            </button>
+
+            <p class="form-footer">¿Ya tienes cuenta? <a href="/login.html">Inicia sesión</a></p>
+          </form>
+        </div>
+
+        <!-- PASO 2: OTP -->
+        <div id="step-verificacion" class="hidden">
+          <h2 class="form-title">Revisa tu correo</h2>
+          <p class="form-subtitle">Enviamos un código de 6 dígitos a <strong id="correo-display" style="color:var(--accent)"></strong></p>
+
+          <div class="otp-grid" id="otp-grid">
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric"/>
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric"/>
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric"/>
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric"/>
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric"/>
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric"/>
+          </div>
+
+          <div class="alert" id="alert-verificacion" role="alert"></div>
+
+          <button type="button" class="btn-primary" id="btn-verificar">
+            <span class="btn-text">Verificar código</span>
+            <span class="btn-spinner hidden">
+              <svg width="18" height="18" viewBox="0 0 24 24" class="spin" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31" stroke-dashoffset="10"/></svg>
+            </span>
+          </button>
+
+          <div class="resend-row">
+            <span id="timer-text">Reenviar en <strong id="countdown" style="color:var(--accent)">15:00</strong></span>
+            <button type="button" class="btn-link hidden" id="btn-reenviar">Reenviar código</button>
+          </div>
+          <button type="button" class="btn-ghost" id="btn-cambiar-correo" style="margin-top:.75rem">← Cambiar correo</button>
+        </div>
+
+        <!-- PASO 3: Éxito -->
+        <div id="step-exito" class="hidden" style="text-align:center;padding:2rem 0">
+          <div style="width:72px;height:72px;background:var(--accent-dim);border-radius:50%;display:grid;place-items:center;margin:0 auto 1.5rem">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 class="form-title">¡Cuenta creada!</h2>
+          <p class="form-subtitle" style="margin-bottom:2rem">Tu cuenta ha sido verificada. Ya puedes iniciar sesión.</p>
+          <a href="/login.html" class="btn-primary">Ir a iniciar sesión</a>
+        </div>
+
       </div>
-
-      <button type="button" class="btn-ghost" id="btn-cambiar-correo">← Cambiar correo</button>
-    </section>
-
-    <section class="tarjeta-formulario form-card hidden" id="step-exito">
-      <h2 class="form-title">¡Cuenta creada!</h2>
-      <p class="form-subtitle">Tu cuenta ha sido verificada correctamente.</p>
-      <a href="/login.html" class="btn-primary">Ir a iniciar sesión</a>
     </section>
 
   </main>
 
-  <script src="js/registro.js"></script>
+  <script src="/js/registro.js"></script>
 </body>
 </html>

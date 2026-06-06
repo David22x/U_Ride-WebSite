@@ -12,6 +12,8 @@ vRouter.get("/mis-viajes", vc.misViajes); // RF3
 vRouter.get("/:id", vc.obtenerViaje); // RF3 + RF9 (incluye reglas)
 vRouter.patch("/:id", vc.modificarViaje); // RF3
 vRouter.delete("/:id", vc.cancelarViaje); // RF3
+vRouter.patch("/:id/finalizar", vc.finalizarViaje);
+vRouter.patch("/:id/iniciar", vc.iniciarViaje);
 
 // Solicitudes
 vRouter.get("/solicitudes/pendientes", vc.solicitudesPend); // RF6

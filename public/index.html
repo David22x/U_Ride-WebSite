@@ -1,41 +1,181 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U-Ride</title>
-    <link rel="stylesheet" href="css/index.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>U-Ride — Transporte universitario seguro</title>
+  <link rel="stylesheet" href="/css/index.css"/>
 </head>
-
 <body>
 
-<header class="navbar">
-    <h1>U-Ride</h1>
+  <div class="bg-noise"></div>
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
 
-    <nav>
-        <a href="#">Viajar</a>
-        <a href="#">Conducir</a>
-        <a href="#">Quienes somos</a>
+  <header class="navbar">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3" stroke="#0c0d10" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="9" y="11" width="14" height="10" rx="2" stroke="#0c0d10" stroke-width="2.2"/>
+          <circle cx="12" cy="21" r="1.5" fill="#0c0d10"/>
+          <circle cx="20" cy="21" r="1.5" fill="#0c0d10"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">U-Ride</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="#features">Características</a>
+      <a href="#how">Cómo funciona</a>
+      <a href="#seguridad">Seguridad</a>
     </nav>
 
-    <div class="acciones">
-        <a href="login.html" class="btn-login">Iniciar sesión</a>
-        <a href="registro.html" class="btn-registro">Regístrate</a>
+    <div class="nav-actions">
+      <a href="/login.html" class="btn-nav-ghost">Iniciar sesión</a>
+      <a href="/registro.html" class="btn-nav-primary">Únete gratis</a>
     </div>
-</header>
+  </header>
 
-<main class="inicio">
-    <div class="mapa">
-        <p class="uta">Universidad<br>Técnica de<br>Ambato</p>
-        <p class="lugar">Facultad de<br>Contabilidad<br>y Auditoría UTA</p>
-    </div>
+  <main>
 
-    <section class="presentacion">
-        <h2>U-Ride</h2>
-        <div class="carro">🚗</div>
+    <!-- ── HERO ── -->
+    <section class="hero">
+      <div class="hero-tag">Exclusivo para estudiantes UTA</div>
+      <h1 class="hero-title">
+        Comparte el viaje,<br/><em>divide el camino</em>
+      </h1>
+      <p class="hero-sub">
+        La plataforma de carpooling universitario de la UTA. Conectamos estudiantes de la misma institución para viajes compartidos seguros, coordinados y verificados.
+      </p>
+      <div class="hero-actions">
+        <a href="/registro.html" class="btn-hero-primary">
+          Crear cuenta gratis
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a href="/login.html" class="btn-hero-ghost">Ya tengo cuenta</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-n">UTA</span>
+          <span class="hero-stat-l">Verificado</span>
+        </div>
+        <div class="hero-stat-sep"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-n">⭐</span>
+          <span class="hero-stat-l">Calificaciones</span>
+        </div>
+        <div class="hero-stat-sep"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-n">🛡️</span>
+          <span class="hero-stat-l">Seguridad</span>
+        </div>
+      </div>
     </section>
-</main>
 
-<script src="js/index.js"></script>
+    <!-- ── FEATURES ── -->
+    <section class="features" id="features">
+      <div class="section-label">Características</div>
+      <h2 class="section-title">Todo lo que necesitas para viajar seguro</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 8l10 6 10-6"/></svg>
+          </div>
+          <h3>Verificación institucional</h3>
+          <p>Solo estudiantes con correo @uta.edu.ec pueden registrarse. Cada cuenta es verificada mediante un código OTP.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h3>Coordinación por zonas</h3>
+          <p>Filtra viajes por zona o barrio. La ubicación se maneja de forma aproximada, nunca se comparten direcciones exactas.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <h3>Sistema de reputación</h3>
+          <p>Califica conductores y pasajeros después de cada viaje. El promedio y el historial son visibles para toda la comunidad.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Reglas de seguridad</h3>
+          <p>Cada viaje puede tener reglas visibles: puntualidad, no compartir datos personales, respeto mutuo y más.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Doble rol</h3>
+          <p>Un mismo estudiante puede actuar como pasajero y como conductor. Cambia de rol con un solo clic.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3>Sistema de reportes</h3>
+          <p>Si alguien incumple las reglas, puedes reportarlo. Los administradores revisan y aplican acciones como advertencias o suspensiones.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HOW ── -->
+    <section class="how" id="how">
+      <div class="section-label">Cómo funciona</div>
+      <h2 class="section-title">En tres pasos</h2>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="step-num">01</div>
+          <h3>Regístrate con tu correo UTA</h3>
+          <p>Crea tu cuenta con tu correo institucional. Recibes un código de verificación que confirma que eres estudiante.</p>
+        </div>
+        <div class="how-step-arrow">→</div>
+        <div class="how-step">
+          <div class="step-num">02</div>
+          <h3>Busca o publica un viaje</h3>
+          <p>Como pasajero filtra viajes por zona y fecha. Como conductor publica tu ruta, horario y cupos disponibles.</p>
+        </div>
+        <div class="how-step-arrow">→</div>
+        <div class="how-step">
+          <div class="step-num">03</div>
+          <h3>Viaja y califica</h3>
+          <p>Solicita unirte, espera confirmación del conductor y viaja. Al finalizar, califica la experiencia.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="cta">
+      <div class="cta-card">
+        <h2 class="cta-title">¿Listo para empezar?</h2>
+        <p class="cta-sub">Únete a la comunidad de carpooling de la UTA. Es gratis, seguro y solo para estudiantes verificados.</p>
+        <div class="cta-actions">
+          <a href="/registro.html" class="btn-hero-primary">Crear cuenta</a>
+          <a href="/login.html" class="btn-hero-ghost">Iniciar sesión</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-logo">
+      <div class="nav-logo-icon" style="width:28px;height:28px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3" stroke="#0c0d10" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="9" y="11" width="14" height="10" rx="2" stroke="#0c0d10" stroke-width="2.2"/>
+          <circle cx="12" cy="21" r="1.5" fill="#0c0d10"/>
+          <circle cx="20" cy="21" r="1.5" fill="#0c0d10"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">U-Ride</span>
+    </div>
+    <p class="footer-text">Proyecto universitario — Universidad Técnica de Ambato · Solo para uso institucional</p>
+  </footer>
+
 </body>
 </html>

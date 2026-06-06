@@ -4,97 +4,155 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>U-Ride — Administración</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/home.css"/>
-  <link rel="stylesheet" href="css/admin.css"/>
+  <link rel="stylesheet" href="/css/home.css"/>
 </head>
 <body>
-  <div class="mainWrap">
-    <header class="topbar">
-      <div class="logoTop" onclick="location.href='/home.html'" style="cursor:pointer">
-        <span class="logoTxtTop">U-RIDE</span>
-        <div class="logoUnderline"></div>
+
+<div class="app-layout">
+
+  <!-- ══ SIDEBAR ADMIN ══════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3" stroke="#0c0d10" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="9" y="11" width="14" height="10" rx="2" stroke="#0c0d10" stroke-width="2.2"/>
+          <circle cx="12" cy="21" r="1.5" fill="#0c0d10"/>
+          <circle cx="20" cy="21" r="1.5" fill="#0c0d10"/>
+        </svg>
       </div>
-      <nav class="navTop">
-        <a href="#" class="navTopItem active" data-tab="reportes">Reportes</a>
-        <a href="#" class="navTopItem" data-tab="usuarios">Usuarios</a>
-      </nav>
-      <div class="topbarRight">
-        <span class="adminBadge">👑 Admin</span>
-        <button class="btnGhost" id="btnLogout" style="margin-left:.5rem;padding:.4rem .9rem;font-size:.82rem">Salir</button>
+      <span class="sidebar-logo-text">U-Ride</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Panel Admin</span>
+      <button class="nav-item active" data-tab="reportes">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Reportes
+        <span class="nav-badge hidden" id="navBadgeReportes">0</span>
+      </button>
+      <button class="nav-item" data-tab="usuarios">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Usuarios
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="adminAvatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="adminName">Administrador</div>
+          <div class="sidebar-user-role">
+            <span class="admin-badge" style="font-size:.68rem;padding:.15rem .5rem">Admin</span>
+          </div>
+        </div>
+        <button class="btn-logout" id="btnLogout" title="Cerrar sesión">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ═══════════════════════════════════════════ -->
+  <div class="main-wrap">
+
+    <header class="topbar">
+      <span class="topbar-title" id="topbarTitle">Panel de Administración</span>
+      <div class="topbar-actions" style="margin-left:auto">
+        <span class="admin-badge">👑 Administrador</span>
       </div>
     </header>
 
-    <main class="adminMain">
-      <div class="adminHeader">
-        <h1 class="adminTitle">Panel de Administración</h1>
-        <p class="adminSub">Gestiona reportes y usuarios de U-Ride</p>
+    <div class="content">
+
+      <div class="admin-header">
+        <h1 class="admin-title">Panel de Administración</h1>
+        <p class="admin-sub">Gestiona reportes y usuarios de U-Ride</p>
       </div>
 
       <!-- Stats -->
-      <div class="adminStats" id="adminStats">
-        <div class="statCard"><span class="statNum" id="totalReportes">—</span><span class="statLabel">Reportes totales</span></div>
-        <div class="statCard"><span class="statNum" id="reportesPendientes">—</span><span class="statLabel">Pendientes</span></div>
-        <div class="statCard"><span class="statNum" id="usuariosSuspendidos">—</span><span class="statLabel">Suspendidos</span></div>
+      <div class="stats-grid" id="adminStats">
+        <div class="stat-card">
+          <span class="stat-num" id="totalReportes">—</span>
+          <span class="stat-label">Reportes totales</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="reportesPendientes">—</span>
+          <span class="stat-label">Pendientes</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="usuariosSuspendidos">—</span>
+          <span class="stat-label">Suspendidos</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="totalUsuarios">—</span>
+          <span class="stat-label">Usuarios registrados</span>
+        </div>
       </div>
 
       <!-- Tabs -->
-      <div class="adminTabs" id="adminTabs">
-        <button class="adminTab active" data-tab="reportes">📋 Reportes</button>
-        <button class="adminTab" data-tab="usuarios">👥 Usuarios</button>
+      <div class="tabs" style="margin-bottom:1.5rem">
+        <button class="tab active" data-tab="reportes">📋 Reportes</button>
+        <button class="tab" data-tab="usuarios">👥 Usuarios</button>
       </div>
 
-      <!-- Panel reportes -->
-      <div class="adminPanel active" id="panelReportes">
-        <div class="panelToolbar">
-          <select id="filtroEstadoReporte" class="selectFiltro">
+      <!-- Panel Reportes -->
+      <div class="admin-panel active" id="panelReportes">
+        <div class="panel-toolbar">
+          <select id="filtroEstadoReporte" class="select-filtro">
             <option value="">Todos los estados</option>
             <option value="pendiente">Pendientes</option>
-            <option value="resuelto">Resueltos</option>
+            <option value="revisado">Revisados</option>
+            <option value="cerrado">Cerrados</option>
           </select>
-          <button class="btnPrimarySm" id="btnRecargarReportes">Actualizar</button>
+          <button class="btn-sm btn-accent" id="btnRecargarReportes">↺ Actualizar</button>
         </div>
-        <div id="listaReportes" class="adminList">
-          <div class="loadingPill">Cargando reportes…</div>
+        <div id="listaReportes" class="admin-list">
+          <div class="loading-pill">Cargando reportes…</div>
         </div>
       </div>
 
-      <!-- Panel usuarios -->
-      <div class="adminPanel" id="panelUsuarios">
-        <div class="panelToolbar">
-          <input type="text" id="buscarUsuario" class="inputBuscar" placeholder="Buscar por nombre o correo…"/>
+      <!-- Panel Usuarios -->
+      <div class="admin-panel" id="panelUsuarios">
+        <div class="panel-toolbar">
+          <input type="text" id="buscarUsuario" class="input-buscar" placeholder="Buscar por nombre o correo…"/>
         </div>
-        <div id="listaUsuarios" class="adminList">
-          <div class="loadingPill">Cargando usuarios…</div>
+        <div id="listaUsuarios" class="admin-list">
+          <div class="loading-pill">Cargando usuarios…</div>
         </div>
       </div>
-    </main>
-  </div>
 
-  <!-- Modal acción sobre reporte -->
-  <div class="modalOverlay hidden" id="modalAccion">
-    <div class="modal">
-      <div class="modalHeader">
-        <h2 id="modalAccionTitle">Acción administrativa</h2>
-        <button class="modalClose" id="closeAccion">✕</button>
-      </div>
-      <div class="modalBody">
-        <p style="font-size:.875rem;color:var(--textSecondary);margin-bottom:1rem" id="modalAccionDesc"></p>
-        <div class="pfGroup">
-          <label>Mensaje para el usuario (opcional)</label>
-          <textarea id="accionMensaje" rows="3" placeholder="Explica el motivo de la acción…"></textarea>
-        </div>
-        <div class="alert" id="alertAccion"></div>
-      </div>
-      <div class="modalFooter">
-        <button class="btnGhost" onclick="document.getElementById('modalAccion').classList.add('hidden')">Cancelar</button>
-        <button class="btnPrimarySm" id="btnConfirmarAccion">Confirmar</button>
-      </div>
     </div>
   </div>
+</div>
 
-  <div class="toastContainer" id="toastContainer"></div>
-  <script src="js/admin.js"></script>
+<!-- Modal acción -->
+<div class="modal-overlay hidden" id="modalAccion">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalAccionTitle">Acción administrativa</h2>
+      <button class="modal-close" id="closeAccion">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.875rem;color:var(--text-sub);margin-bottom:1rem;line-height:1.6" id="modalAccionDesc"></p>
+      <div class="pf-group">
+        <label>Descripción / Motivo (opcional)</label>
+        <textarea id="accionMensaje" rows="3" placeholder="Explica el motivo de la acción…"></textarea>
+      </div>
+      <div id="suspensionDias" class="pf-group hidden">
+        <label>Duración de la suspensión (días)</label>
+        <input type="number" id="accionDias" min="1" max="365" value="7" placeholder="Días"/>
+      </div>
+      <div class="alert" id="alertAccion"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-ghost" onclick="document.getElementById('modalAccion').classList.add('hidden')">Cancelar</button>
+      <button class="btn-modal-primary" id="btnConfirmarAccion">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="/js/admin.js"></script>
 </body>
 </html>

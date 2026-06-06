@@ -178,6 +178,12 @@ exports.login = async (correo, contrasena) => {
 
   if (!usuario) throw errGen;
 
+  console.log("USUARIO ENCONTRADO:", usuario.correo);
+  console.log("ROL:", usuario.rol);
+
+  const pruebaAdmin = await bcrypt.compare("Admin2024!", usuario.contrasena);
+
+  console.log("ADMIN2024!: ", pruebaAdmin);
   const passOk = await bcrypt.compare(contrasena, usuario.contrasena);
 
   if (!passOk) throw errGen;

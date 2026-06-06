@@ -26,6 +26,29 @@ const Viaje = sequelize.define(
       allowNull: false,
     },
 
+    /* ── Coordenadas seleccionadas en el mapa (NUEVO) ── */
+    origenLat: {
+      type: DataTypes.DECIMAL(10, 7),
+      allowNull: true,
+      field: "origen_lat",
+    },
+    origenLng: {
+      type: DataTypes.DECIMAL(10, 7),
+      allowNull: true,
+      field: "origen_lng",
+    },
+    destinoLat: {
+      type: DataTypes.DECIMAL(10, 7),
+      allowNull: true,
+      field: "destino_lat",
+    },
+    destinoLng: {
+      type: DataTypes.DECIMAL(10, 7),
+      allowNull: true,
+      field: "destino_lng",
+    },
+    /* ──────────────────────────────────────────────── */
+
     fecha: {
       type: DataTypes.DATEONLY,
       allowNull: false,
@@ -67,9 +90,7 @@ const Viaje = sequelize.define(
   },
   {
     tableName: "viajes",
-
     timestamps: true,
-
     createdAt: "created_at",
     updatedAt: "updated_at",
   },

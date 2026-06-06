@@ -1,5 +1,6 @@
 const { Server } = require("socket.io");
 const solicitudSocket = require("./solicitud.socket");
+const ubicacionSocket = require("./ubicacion.socket"); // ← NUEVO
 
 function initSockets(server) {
   const io = new Server(server, {
@@ -13,6 +14,7 @@ function initSockets(server) {
     socket.on("unirse", (usuarioId) => socket.join(`user:${usuarioId}`));
 
     solicitudSocket(io, socket);
+    ubicacionSocket(io, socket); // ← NUEVO
 
     socket.on("disconnect", () =>
       console.log(`Socket desconectado: ${socket.id}`),

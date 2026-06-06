@@ -139,7 +139,12 @@ Resena.belongsTo(Usuario, {
 /* Usuario ↔ Reportes */
 Usuario.hasMany(Reporte, {
   foreignKey: "reportanteId",
-  as: "reportesHechos",
+  as: "reportesRealizados",
+});
+
+Usuario.hasMany(Reporte, {
+  foreignKey: "reportadoId",
+  as: "reportesRecibidos",
 });
 
 Reporte.belongsTo(Usuario, {
@@ -147,12 +152,37 @@ Reporte.belongsTo(Usuario, {
   as: "reportante",
 });
 
+Reporte.belongsTo(Usuario, {
+  foreignKey: "reportadoId",
+  as: "reportado",
+});
+
+/* Reporte ↔ Viaje */
+Viaje.hasMany(Reporte, {
+  foreignKey: "viajeId",
+  as: "reportes",
+});
+
+Reporte.belongsTo(Viaje, {
+  foreignKey: "viajeId",
+  as: "viaje",
+});
+
 /* Reporte ↔ AccionAdministrativa */
-Reporte.hasMany(AccionAdministrativa, { foreignKey: "reporteId", as: "acciones" });
-AccionAdministrativa.belongsTo(Reporte, { foreignKey: "reporteId", as: "reporte" });
+Reporte.hasMany(AccionAdministrativa, {
+  foreignKey: "reporteId",
+  as: "acciones",
+});
+AccionAdministrativa.belongsTo(Reporte, {
+  foreignKey: "reporteId",
+  as: "reporte",
+});
 
 /* AccionAdministrativa ↔ Usuario (admin) */
-Usuario.hasMany(AccionAdministrativa, { foreignKey: "adminId", as: "accionesHechas" });
+Usuario.hasMany(AccionAdministrativa, {
+  foreignKey: "adminId",
+  as: "accionesHechas",
+});
 AccionAdministrativa.belongsTo(Usuario, { foreignKey: "adminId", as: "admin" });
 
 /* Usuario ↔ Verificaciones */

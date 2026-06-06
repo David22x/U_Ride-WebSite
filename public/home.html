@@ -3,476 +3,657 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>U-Ride — Inicio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/home.css"/>
+  <title>U-Ride</title>
+  <link rel="stylesheet" href="/css/home.css"/>
+  <link rel="stylesheet" href="/css/maps.css"/>   <!-- NUEVO -->
 </head>
 <body>
 
-  <!-- Sidebar (oculto por diseño) -->
-  <aside class="sidebar" id="sidebar" style="display:none;">
-    <div class="sidebarTop">
-      <div class="logo"><span class="logoTxt">U-Ride</span></div>
-      <nav class="nav">
-        <a href="#" class="navItem active" data-view="inicio">Inicio</a>
-        <a href="#" class="navItem" data-view="buscar">Buscar viaje</a>
-        <a href="#" class="navItem" data-view="misViajes">Mis viajes</a>
-        <a href="#" class="navItem" id="navCrearSidebar">Crear viaje</a>
-        <a href="#" class="navItem" data-view="perfil">Mi perfil</a>
-      </nav>
-    </div>
-    <div class="sidebarUser">
-      <div class="userAvatar" id="userAvatar">D</div>
-      <div class="userInfo">
-        <span class="userName" id="userName">Cargando…</span>
-        <span class="userRole" id="userRole">Estudiante</span>
+<div class="app-layout">
+
+  <!-- ══ SIDEBAR ════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" onclick="cambiarVista('inicio')">
+      <div class="sidebar-logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3" stroke="#0c0d10" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="9" y="11" width="14" height="10" rx="2" stroke="#0c0d10" stroke-width="2.2"/>
+          <circle cx="12" cy="21" r="1.5" fill="#0c0d10"/>
+          <circle cx="20" cy="21" r="1.5" fill="#0c0d10"/>
+        </svg>
       </div>
-      <button class="btnLogout" id="btnLogout" title="Cerrar sesión">Salir</button>
+      <span class="sidebar-logo-text">U-Ride</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Principal</span>
+      <button class="nav-item active" data-view="inicio">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Inicio
+      </button>
+      <button class="nav-item" data-view="buscar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Buscar viaje
+      </button>
+      <button class="nav-item" data-view="misViajes">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Mis viajes
+      </button>
+      <button class="nav-item" id="navPublicar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        Publicar viaje
+      </button>
+
+      <span class="nav-section-label">Cuenta</span>
+      <button class="nav-item" data-view="perfil">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Mi perfil
+      </button>
+
+      <span class="nav-section-label" id="labelSolicitudes" style="display:none">Conductor</span>
+      <button class="nav-item" id="navSolicitudes" style="display:none" data-view="solicitudes">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Solicitudes
+        <span class="nav-badge hidden" id="solBadge">0</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user" id="sidebarUser">
+        <div class="sidebar-avatar" id="sidebarAvatar">D</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebarName">Cargando…</div>
+          <div class="sidebar-user-role" id="sidebarRole">Estudiante</div>
+        </div>
+        <button class="btn-logout" id="btnLogout" title="Cerrar sesión">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
     </div>
   </aside>
 
-  <div class="mainWrap">
+  <!-- ══ MAIN ═══════════════════════════════════════════ -->
+  <div class="main-wrap">
 
-    <!-- ── TOPBAR ────────────────────────────────────────── -->
+    <!-- Topbar -->
     <header class="topbar">
-      <div class="logoTop" data-view="inicio" style="cursor:pointer">
-        <span class="logoTxtTop">U-RIDE</span>
-        <div class="logoUnderline"></div>
+      <span class="topbar-title" id="topbarTitle">Inicio</span>
+      <span class="topbar-sep"></span>
+
+      <div class="topbar-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Buscar viajes por zona…"/>
       </div>
 
-      <nav class="navTop">
-        <a href="#" class="navTopItem" data-view="buscar">Buscar</a>
-        <a href="#" class="navTopItem" data-view="misViajes">Mis viajes</a>
-        <a href="#" class="navTopItem" id="navCrear">Crear viaje</a>
-      </nav>
-
-      <div class="topbarSearch" style="display:none;">
-        <input type="text" id="searchInput" placeholder="Buscar por zona o ruta…"/>
-      </div>
-
-      <div class="topbarRight">
-        <!-- Perfil -->
-        <div class="profileBtnTop" data-view="perfil" id="profileBtnTop">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0E1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-        </div>
-
-        <!-- Toggle de rol -->
-        <div class="rolToggleWrap modoPasajero" id="rolSwitchBtn" aria-label="Cambiar rol">
-          <div class="rolToggleKnob" id="rolToggleKnob"></div>
-          <div style="display:none;">
-            <span class="rolSwitchIcon">
-              <svg class="iconPasajero"></svg>
-              <svg class="iconConductor"></svg>
-            </span>
-            <span class="rolSwitchLabel" id="rolSwitchLabel">Pasajero</span>
+      <div class="topbar-actions">
+        <!-- Rol switch -->
+        <div style="position:relative">
+          <button class="rol-toggle" id="rolToggle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span id="rolLabel">Pasajero</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="rol-dropdown hidden" id="rolDropdown">
+            <button class="rol-option active" id="optPasajero" data-rol="pasajero">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Pasajero
+            </button>
+            <button class="rol-option" id="optConductor" data-rol="conductor">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              Conductor
+            </button>
           </div>
         </div>
 
-        <!-- Dropdown de rol -->
-        <div class="rolDropdown hidden" id="rolDropdown">
-          <button class="rolOption active" id="optPasajero" data-rol="pasajero">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            Pasajero
-          </button>
-          <button class="rolOption" id="optConductor" data-rol="conductor">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="3" width="15" height="13" rx="2"/>
-              <path d="M16 8h4l3 5v3h-7V8z"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/>
-              <circle cx="18.5" cy="18.5" r="2.5"/>
-            </svg>
-            Conductor
-          </button>
-        </div>
-
         <!-- Notificaciones -->
-        <button class="notifBtn" id="notifBtn" aria-label="Notificaciones" style="display:none;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-          </svg>
-          <span class="notifBadge hidden" id="notifBadge">0</span>
+        <button class="notif-btn" id="notifBtn" title="Notificaciones">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge hidden" id="notifBadge">0</span>
         </button>
       </div>
     </header>
 
-    <!-- Panel de notificaciones -->
-    <div class="notifPanel hidden" id="notifPanel">
-      <div class="notifHeader">
+    <!-- Notif panel -->
+    <div class="notif-panel hidden" id="notifPanel">
+      <div class="notif-header">
         <span>Notificaciones</span>
-        <button class="notifClear" id="notifClear">Limpiar</button>
+        <button class="notif-clear" id="notifClear">Limpiar</button>
       </div>
-      <ul class="notifList" id="notifList">
-        <li class="notifEmpty">Sin notificaciones nuevas</li>
+      <ul class="notif-list" id="notifList">
+        <li class="notif-empty">Sin notificaciones nuevas</li>
       </ul>
     </div>
 
-    <!-- ── VISTA: INICIO ──────────────────────────────────── -->
-    <main class="view active" id="viewInicio">
+    <!-- ══ CONTENT ══════════════════════════════════════ -->
+    <div class="content">
 
-      <section class="greeting" style="display:none;">
-        <div>
-          <h1 class="greetingTitle" id="greetingMsg">Buenos días 👋</h1>
-          <p class="greetingSub">¿Qué necesitas hoy?</p>
-        </div>
-        <div class="greetingStats">
-          <div class="statPill">
-            <span class="statN" id="statViajes">—</span>
-            <span class="statL">viajes</span>
-          </div>
-          <div class="statPill">
-            <span class="statN" id="statRep">—</span>
-            <span class="statL">reputación</span>
-          </div>
-        </div>
-      </section>
+      <!-- ── VISTA: INICIO ─────────────────────────────── -->
+      <main class="view active" id="viewInicio">
 
-      <div class="modeBanner" id="modeBanner" style="display:none;">
-        <span class="modeBannerIcon" id="modeBannerIcon">🧍</span>
-        <div>
-          <strong id="modeBannerTitle">Modo Pasajero activo</strong>
-          <p id="modeBannerSub">Puedes buscar y solicitar viajes disponibles.</p>
+        <div class="greeting" id="greetingWrap">
+          <div>
+            <h1 class="greeting-title" id="greetingMsg">Buenos días 👋</h1>
+            <p class="greeting-sub">¿Qué necesitas hoy?</p>
+          </div>
+          <div class="stat-pills">
+            <div class="stat-pill">
+              <span class="stat-n" id="statViajes">—</span>
+              <span class="stat-l">viajes</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-n" id="statRep">—</span>
+              <span class="stat-l">reputación</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mode-banner pasajero" id="modeBanner">
+          <span class="mode-icon" id="modeIcon">🧍</span>
+          <div>
+            <strong id="modeBannerTitle">Modo Pasajero activo</strong>
+            <p id="modeBannerSub">Puedes buscar y solicitar viajes disponibles.</p>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <button class="qa-card" data-view="buscar">
+            <div class="qa-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+            <div>
+              <div class="qa-label">Buscar viaje</div>
+              <div class="qa-sub">Encuentra tu ruta</div>
+            </div>
+          </button>
+          <button class="qa-card" id="qaPublicar">
+            <div class="qa-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div>
+            <div>
+              <div class="qa-label">Publicar viaje</div>
+              <div class="qa-sub">Modo conductor</div>
+            </div>
+          </button>
+          <button class="qa-card" data-view="misViajes">
+            <div class="qa-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div>
+              <div class="qa-label">Mis viajes</div>
+              <div class="qa-sub">Historial y activos</div>
+            </div>
+          </button>
+          <button class="qa-card" data-view="perfil">
+            <div class="qa-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div>
+              <div class="qa-label">Mi perfil</div>
+              <div class="qa-sub">Datos personales</div>
+            </div>
+          </button>
+        </div>
+
+        <div class="viaje-actual-section hidden" id="sectionViajeActual">
+          <div class="section-head" style="margin-bottom:.6rem">
+            <h2 class="section-title">🚗 Viaje actual</h2>
+          </div>
+        
+          <div class="viaje-actual-card" id="cardViajeActual">
+            <!-- header: badge estado + ruta -->
+            <div class="vac-header">
+              <span class="vac-badge" id="vacBadge">En curso</span>
+              <span class="vac-ruta" id="vacRuta">— → —</span>
+            </div>
+        
+            <!-- datos del viaje -->
+            <div class="vac-body">
+              <div class="vac-row">
+                <span>Conductor</span>
+                <span id="vacConductor">—</span>
+              </div>
+              <div class="vac-row">
+                <span>Vehículo</span>
+                <span id="vacVehiculo">—</span>
+              </div>
+              <div class="vac-row">
+                <span>Fecha</span>
+                <span id="vacFecha">—</span>
+              </div>
+              <div class="vac-row">
+                <span>Horario</span>
+                <span id="vacHorario">—</span>
+              </div>
+            </div>
+        
+            <!-- mapa con los puntos de origen y destino -->
+            <div class="vac-map-wrap">
+              <div class="map-container" id="mapViajeActual"></div>
+              <!-- Panel de tracking GPS si el viaje está en_curso -->
+              <div class="tracking-panel hidden" id="vacTrackingPanel">
+                <div class="tracking-dot" id="vacTrackingDot"></div>
+                <div class="tracking-label">
+                  <strong>Conductor en camino</strong>
+                  <small id="vacTrackingTs">Esperando ubicación…</small>
+                </div>
+              </div>
+            </div>
+        
+            <!-- acciones del pasajero -->
+            <div class="vac-actions" id="vacAcciones">
+              <!-- Se llena dinámicamente desde JS -->
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-head">
+            <h2 class="section-title">Viajes disponibles</h2>
+            <a href="#" class="section-link" data-view="buscar">Ver todos →</a>
+          </div>
+          <div class="viajes-grid" id="viajesGrid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+        </div>
+
+        <div class="section-block hidden" id="sectionSolicitudes">
+          <div class="section-head">
+            <h2 class="section-title">Solicitudes pendientes</h2>
+            <span class="badge-count" id="badgeSol">0</span>
+          </div>
+          <div class="solicitudes-list" id="solicitudesList"></div>
+        </div>
+
+      </main>
+
+      <!-- ── VISTA: BUSCAR ──────────────────────────────── -->
+      <main class="view" id="viewBuscar">
+        <h1 class="page-title">Buscar viaje</h1>
+        <div class="search-bar">
+          <div class="sbar-field">
+            <label>Origen</label>
+            <input type="text" id="filtroOrigen" placeholder="Zona de salida…"/>
+          </div>
+          <div class="sbar-field">
+            <label>Destino</label>
+            <input type="text" id="filtroDestino" placeholder="Campus o zona…"/>
+          </div>
+          <div class="sbar-field">
+            <label>Fecha</label>
+            <input type="date" id="filtroFecha"/>
+          </div>
+          <button class="btn-buscar" id="btnBuscarViajes">Buscar</button>
+        </div>
+        <div class="viajes-grid" id="viajesGridBuscar"></div>
+      </main>
+
+      <!-- ── VISTA: MIS VIAJES ──────────────────────────── -->
+      <main class="view" id="viewMisViajes">
+        <h1 class="page-title">Mis viajes</h1>
+        <div class="tabs">
+          <button class="tab active" data-tab="comoPasajero">Como pasajero</button>
+          <button class="tab" data-tab="comoConductor">Como conductor</button>
+        </div>
+        <div class="tab-content" id="tabComoPasajero"></div>
+        <div class="tab-content hidden" id="tabComoConductor"></div>
+      </main>
+
+      <!-- ── VISTA: SOLICITUDES (conductor) ─────────────── -->
+      <main class="view" id="viewSolicitudes">
+        <h1 class="page-title">Solicitudes pendientes</h1>
+        <div class="solicitudes-list" id="solicitudesListView"></div>
+      </main>
+
+      <!-- ── VISTA: PERFIL ──────────────────────────────── -->
+      <main class="view" id="viewPerfil">
+        <h1 class="page-title">Mi perfil</h1>
+        <div class="perfil-layout">
+
+          <div class="perfil-card">
+            <div class="perfil-card-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Datos personales
+            </div>
+            <div class="perfil-avatar-wrap">
+              <div class="perfil-avatar" id="perfilAvatar">D</div>
+              <button class="btn-avatar-edit" id="btnAvatarEdit">Cambiar foto</button>
+              <input type="file" id="inputFoto" accept="image/*" class="hidden"/>
+            </div>
+            <form id="formPerfil">
+              <div class="pf-row">
+                <div class="pf-group">
+                  <label>Nombre</label>
+                  <input type="text" id="pfNombre" placeholder="Tu nombre"/>
+                </div>
+                <div class="pf-group">
+                  <label>Apellido</label>
+                  <input type="text" id="pfApellido" placeholder="Tu apellido"/>
+                </div>
+              </div>
+              <div class="pf-group">
+                <label>Correo institucional</label>
+                <input type="email" id="pfCorreo" disabled/>
+              </div>
+              <div class="pf-row">
+                <div class="pf-group">
+                  <label>Carrera</label>
+                  <input type="text" id="pfCarrera" placeholder="Tu carrera"/>
+                </div>
+                <div class="pf-group">
+                  <label>Zona / Barrio</label>
+                  <input type="text" id="pfZona" placeholder="Tu sector"/>
+                </div>
+              </div>
+              <div class="pf-group">
+                <label>Teléfono (opcional)</label>
+                <input type="tel" id="pfTelefono" placeholder="+593…"/>
+              </div>
+              <div class="alert" id="alertPerfil"></div>
+              <button type="submit" class="btn-save">Guardar cambios</button>
+            </form>
+          </div>
+
+          <div class="perfil-card" id="cardConductor">
+            <div class="perfil-card-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              Datos del vehículo
+            </div>
+            <p class="perfil-card-desc">Para publicar viajes completa los datos de tu vehículo. Esta información será visible para los pasajeros.</p>
+            <form id="formConductor">
+              <div class="pf-row">
+                <div class="pf-group">
+                  <label>Marca / Modelo</label>
+                  <input type="text" id="pfVehiculo" placeholder="Ej: Chevrolet Aveo"/>
+                </div>
+                <div class="pf-group">
+                  <label>Color</label>
+                  <input type="text" id="pfColor" placeholder="Ej: Gris plata"/>
+                </div>
+              </div>
+              <div class="pf-row">
+                <div class="pf-group">
+                  <label>Placa</label>
+                  <input type="text" id="pfPlaca" placeholder="Ej: ABC-1234" maxlength="8"/>
+                </div>
+                <div class="pf-group">
+                  <label>Nº de licencia</label>
+                  <input type="text" id="pfLicencia" placeholder="Número de licencia"/>
+                </div>
+              </div>
+              <div class="alert" id="alertConductor"></div>
+              <button type="submit" class="btn-save">Guardar datos del vehículo</button>
+            </form>
+          </div>
+
+        </div>
+      </main>
+
+    </div><!-- /content -->
+  </div><!-- /main-wrap -->
+</div><!-- /app-layout -->
+
+<!-- ══ MODAL: PUBLICAR VIAJE ═══════════════════════════ -->
+<div class="modal-overlay hidden" id="modalCrear">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Publicar viaje</h2>
+      <button class="modal-close" id="modalCrearClose">✕</button>
+    </div>
+    <form id="formCrearViaje">
+      <div class="modal-body">
+
+        <div class="pf-row">
+          <div class="pf-group">
+            <label>Punto de origen</label>
+          
+            <!-- Dirección detectada / escrita manualmente -->
+            <input type="text" id="cvOrigen" placeholder="Ej: Cdla. España, Ambato" required
+                  style="margin-bottom:.4rem"/>
+          
+            <!-- Campos ocultos con coordenadas (se llenan al pinchar el mapa) -->
+            <input type="hidden" id="cvOrigenLat"/>
+            <input type="hidden" id="cvOrigenLng"/>
+          
+            <!-- Botón para abrir el selector de mapa de origen -->
+            <button type="button" class="btn-map btn-map-ghost" id="btnPickOrigen"
+                    style="width:100%;justify-content:center;gap:.4rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+              </svg>
+              Seleccionar en el mapa
+            </button>
+          
+            <!-- Mapa selector de origen (oculto por defecto) -->
+            <div id="mapaPickerOrigenWrap" style="display:none;margin-top:.5rem;position:relative">
+              <span class="map-hint">Haz clic en el mapa para marcar el origen</span>
+              <div class="map-container map-picker" id="mapaPickerOrigen"></div>
+              <div class="map-detected-address" id="origenAddressBox">
+                <span class="addr-icon">📍</span>
+                <span class="addr-text" id="origenAddressText">Haz clic en el mapa…</span>
+                <button type="button" class="btn-change-point" id="btnConfirmOrigen">✓ Usar este punto</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="pf-group">
+            <label>Punto de destino</label>
+          
+            <input type="text" id="cvDestino" placeholder="Ej: UTA Huachi, Ambato" required
+                  style="margin-bottom:.4rem"/>
+          
+            <input type="hidden" id="cvDestinoLat"/>
+            <input type="hidden" id="cvDestinoLng"/>
+          
+            <button type="button" class="btn-map btn-map-ghost" id="btnPickDestino"
+                    style="width:100%;justify-content:center;gap:.4rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+              </svg>
+              Seleccionar en el mapa
+            </button>
+          
+            <div id="mapaPickerDestinoWrap" style="display:none;margin-top:.5rem;position:relative">
+              <span class="map-hint">Haz clic en el mapa para marcar el destino</span>
+              <div class="map-container map-picker" id="mapaPickerDestino"></div>
+              <div class="map-detected-address" id="destinoAddressBox">
+                <span class="addr-icon">🏁</span>
+                <span class="addr-text" id="destinoAddressText">Haz clic en el mapa…</span>
+                <button type="button" class="btn-change-point" id="btnConfirmDestino">✓ Usar este punto</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pf-row" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="pf-group">
+            <label>Fecha</label>
+            <input type="date" id="cvFecha" required/>
+          </div>
+          <div class="pf-group">
+            <label>Hora salida</label>
+            <input type="time" id="cvHoraSalida" required/>
+          </div>
+          <div class="pf-group">
+            <label>Hora llegada</label>
+            <input type="time" id="cvHoraLlegada" required/>
+          </div>
+        </div>
+
+        <div class="pf-group">
+          <label>Cupos disponibles</label>
+          <input type="number" id="cvCupos" min="1" max="10" value="3" required/>
+        </div>
+
+        <div class="pf-group">
+          <label>Notas del viaje</label>
+          <textarea id="cvNotas" rows="2" placeholder="Información adicional, punto de encuentro…"></textarea>
+        </div>
+
+        <div class="pf-group">
+          <label>Reglas de seguridad (RF9)</label>
+          <textarea id="cvReglas" rows="2" placeholder="Puntualidad, no fumar, no compartir datos personales…"></textarea>
+        </div>
+
+        <div class="alert" id="alertCrear"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-ghost" id="modalCrearCancel">Cancelar</button>
+        <button type="submit" class="btn-modal-primary" id="btnPublicar">Publicar viaje</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══ MODAL: DETALLE VIAJE ════════════════════════════ -->
+<div class="modal-overlay hidden" id="modalViaje">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="detailRuta">—</h2>
+      <button class="modal-close" id="detailClose">✕</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+
+    <!-- ══ MAPA EN DETALLE (NUEVO) ══════════════════════ -->
+    <div class="modal-body" style="padding-top:0">
+      <button class="map-toggle-btn" id="btnToggleMapaDetalle">
+        🗺 Ver ruta en mapa
+      </button>
+      <div id="mapaDetalleWrap" style="display:none">
+        <div class="map-container" id="mapDetalleViaje"></div>
+        <!-- Panel de tracking en tiempo real (visible solo si el viaje está en_curso) -->
+        <div class="tracking-panel hidden" id="trackingPanelDetalle">
+          <div class="tracking-dot" id="trackingDotDetalle"></div>
+          <div class="tracking-label">
+            <strong>Tracking en vivo</strong>
+            <small id="trackingTimestamp">Esperando posición del conductor…</small>
+          </div>
         </div>
       </div>
+    </div>
 
-      <section class="quickActions" style="display:none;">
-        <button class="qaCard qaBuscar" data-view="buscar">
-          <div class="qaIcon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-          </div>
-          <span class="qaTitle">Buscar viaje</span>
-        </button>
-        <button class="qaCard qaCrear" id="qaCrear">
-          <div class="qaIcon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>
-            </svg>
-          </div>
-          <span class="qaTitle">Publicar viaje</span>
-        </button>
-        <button class="qaCard qaHistorial" data-view="misViajes">
-          <div class="qaIcon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-            </svg>
-          </div>
-          <span class="qaTitle">Mis viajes</span>
-        </button>
-        <button class="qaCard qaPerfil" data-view="perfil">
-          <div class="qaIcon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-          </div>
-          <span class="qaTitle">Mi perfil</span>
-        </button>
-      </section>
-
-      <section class="sectionBlock">
-        <div class="sectionHead" style="display:none;">
-          <h2 class="sectionTitle">Viajes disponibles</h2>
-          <a href="#" class="sectionLink" data-view="buscar">Ver todos →</a>
-        </div>
-        <div class="viajesGrid" id="viajesGrid">
-          <div class="skeletonCard"></div>
-          <div class="skeletonCard"></div>
-          <div class="skeletonCard"></div>
-        </div>
-      </section>
-
-      <section class="sectionBlock" id="sectionSolicitudes" style="display:none">
-        <div class="sectionHead">
-          <h2 class="sectionTitle">Solicitudes recientes</h2>
-          <span class="badgeCount" id="badgeSol">0</span>
-        </div>
-        <div class="solicitudesList" id="solicitudesList"></div>
-      </section>
-
-    </main>
-
-    <!-- ── VISTA: BUSCAR ──────────────────────────────────── -->
-    <main class="view" id="viewBuscar">
-      <h1 class="pageTitle">Buscar viaje</h1>
-      <div class="searchBarFull">
-        <div class="sbarField">
-          <label>Origen</label>
-          <input type="text" id="filtroOrigen" placeholder="Zona de salida…"/>
-        </div>
-        <div class="sbarField">
-          <label>Destino</label>
-          <input type="text" id="filtroDestino" placeholder="Campus o zona…"/>
-        </div>
-        <div class="sbarField">
-          <label>Fecha</label>
-          <input type="date" id="filtroFecha"/>
-        </div>
-        <button class="btnBuscar" id="btnBuscarViajes">Buscar</button>
-      </div>
-      <div class="viajesGrid" id="viajesGridBuscar"></div>
-    </main>
-
-    <!-- ── VISTA: MIS VIAJES ──────────────────────────────── -->
-    <main class="view" id="viewMisViajes">
-      <h1 class="pageTitle">Mis viajes</h1>
-      <div class="tabs">
-        <button class="tab active" data-tab="comoPasajero">Como pasajero</button>
-        <button class="tab" data-tab="comoConductor">Como conductor</button>
-      </div>
-      <div class="tabContent" id="tabComoPasajero"></div>
-      <div class="tabContent hidden" id="tabComoConductor"></div>
-    </main>
-
-    <!-- ── VISTA: PERFIL ──────────────────────────────────── -->
-    <main class="view" id="viewPerfil">
-      <h1 class="pageTitle">Mi perfil</h1>
-      <div class="perfilLayout">
-
-        <div class="perfilCard">
-          <div class="perfilCardHeader">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            Datos personales
-          </div>
-          <div class="perfilAvatarWrap">
-            <div class="perfilAvatar" id="perfilAvatar">D</div>
-            <button class="btnAvatarEdit" id="btnAvatarEdit">Cambiar foto</button>
-            <input type="file" id="inputFoto" accept="image/*" class="hidden"/>
-          </div>
-          <form class="perfilForm" id="formPerfil">
-            <div class="pfRow">
-              <div class="pfGroup">
-                <label>Nombre</label>
-                <input type="text" id="pfNombre"/>
-              </div>
-              <div class="pfGroup">
-                <label>Apellido</label>
-                <input type="text" id="pfApellido"/>
-              </div>
-            </div>
-            <div class="pfGroup">
-              <label>Correo institucional</label>
-              <input type="email" id="pfCorreo" disabled/>
-            </div>
-            <div class="pfRow">
-              <div class="pfGroup">
-                <label>Carrera</label>
-                <input type="text" id="pfCarrera"/>
-              </div>
-              <div class="pfGroup">
-                <label>Zona / Barrio</label>
-                <input type="text" id="pfZona"/>
-              </div>
-            </div>
-            <div class="pfGroup">
-              <label>Teléfono (opcional)</label>
-              <input type="tel" id="pfTelefono" placeholder="+593…"/>
-            </div>
-            <div class="alert" id="alertPerfil"></div>
-            <button type="submit" class="btnGuardar">Guardar cambios</button>
-          </form>
-        </div>
-
-        <div class="perfilCard" id="cardConductor">
-          <div class="perfilCardHeader">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="3" width="15" height="13" rx="2"/>
-              <path d="M16 8h4l3 5v3h-7V8z"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/>
-              <circle cx="18.5" cy="18.5" r="2.5"/>
-            </svg>
-            Información de conductor
-          </div>
-          <p class="perfilCardDesc">
-            Para publicar viajes, completa los datos de tu vehículo. Esta información será visible para los pasajeros.
-          </p>
-          <form class="perfilForm" id="formConductor">
-            <div class="pfRow">
-              <div class="pfGroup">
-                <label>Marca / Modelo</label>
-                <input type="text" id="pfVehiculo" placeholder="Ej: Chevrolet Aveo"/>
-              </div>
-              <div class="pfGroup">
-                <label>Color</label>
-                <input type="text" id="pfColor" placeholder="Ej: Gris plata"/>
-              </div>
-            </div>
-            <div class="pfRow">
-              <div class="pfGroup">
-                <label>Placa</label>
-                <input type="text" id="pfPlaca" placeholder="Ej: ABC-1234" maxlength="8"/>
-              </div>
-              <div class="pfGroup">
-                <label>Nº de licencia</label>
-                <input type="text" id="pfLicencia" placeholder="Nro. de licencia"/>
-              </div>
-            </div>
-            <div class="pfGroup">
-              <label>Vencimiento licencia</label>
-              <input type="date" id="pfLicenciaVence"/>
-            </div>
-            <div class="alert" id="alertConductor"></div>
-            <button type="submit" class="btnGuardar">Guardar datos del vehículo</button>
-          </form>
-        </div>
-
-      </div>
-    </main>
-
-  </div><!-- /mainWrap -->
-
-  <!-- ══ MODAL: CREAR VIAJE ══════════════════════════════ -->
-  <div class="modalOverlay hidden" id="modalCrear">
-    <div class="modal">
-      <div class="modalHeader">
-        <h2>Publicar viaje</h2>
-        <button class="modalClose" id="modalClose">✕</button>
-      </div>
-      <form id="formCrearViaje">
-        <div class="modalBody">
-          <div class="pfRow">
-            <div class="pfGroup">
-              <label>Origen (zona)</label>
-              <input type="text" id="cvOrigen" placeholder="Ej: Píllaro" required/>
-            </div>
-            <div class="pfGroup">
-              <label>Destino</label>
-              <input type="text" id="cvDestino" placeholder="Ej: UTA Huachi" required/>
-            </div>
-          </div>
-          <div class="pfRow">
-            <div class="pfGroup">
-              <label>Fecha</label>
-              <input type="date" id="cvFecha" required/>
-            </div>
-            <div class="pfGroup">
-              <label>Hora salida</label>
-              <input type="time" id="cvHoraSalida" required/>
-            </div>
-            <div class="pfGroup">
-              <label>Hora llegada</label>
-              <input type="time" id="cvHoraLlegada" required/>
-            </div>
-          </div>
-          <div class="pfGroup">
-            <label>Cupos disponibles</label>
-            <input type="number" id="cvCupos" min="1" max="10" value="3" required/>
-          </div>
-          <div class="pfGroup">
-            <label>Notas del viaje</label>
-            <textarea id="cvNotas" rows="2" placeholder="Información adicional…"></textarea>
-          </div>
-          <div class="pfGroup">
-            <label>Reglas de seguridad (RF9)</label>
-            <textarea id="cvReglas" rows="2" placeholder="Puntualidad, no fumar, efectivo, no compartir datos…"></textarea>
-          </div>
-          <div class="alert" id="alertCrear"></div>
-        </div>
-        <div class="modalFooter">
-          <button type="button" class="btnGhost" id="modalCancel">Cancelar</button>
-          <button type="submit" class="btnPrimarySm" id="btnPublicar">Publicar viaje</button>
-        </div>
-      </form>
+    <div class="modal-footer">
+      <button type="button" class="btn-modal-ghost" id="detailCancel">Cerrar</button>
+      <button type="button" class="btn-modal-danger hidden" id="btnReportarViaje">⚠ Reportar</button>
+      <button type="button" class="btn-modal-primary" id="btnSolicitar">Solicitar cupo</button>
     </div>
   </div>
+</div>
 
-  <!-- ══ MODAL: DETALLE VIAJE ════════════════════════════ -->
-  <div class="modalOverlay hidden" id="modalViaje">
-    <div class="modal">
-      <div class="modalHeader">
-        <h2 id="detailRuta">Ruta</h2>
-        <button class="modalClose" id="detailClose">✕</button>
+<!-- ══ MODAL: CALIFICAR (RF8) ══════════════════════════ -->
+<div class="modal-overlay hidden" id="modalCalificar">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Calificar participante</h2>
+      <button class="modal-close" id="closeCalificar">✕</button>
+    </div>
+    <form id="formCalificar">
+      <div class="modal-body">
+        <p style="font-size:.88rem;color:var(--text-sub);margin-bottom:1rem">Calificando a: <strong id="calNombre" style="color:var(--text)"></strong></p>
+        <input type="hidden" id="calViajeId"/>
+        <input type="hidden" id="calEvaluadoId"/>
+        <input type="hidden" id="calPuntuacion"/>
+        <div class="pf-group">
+          <label>Puntuación</label>
+          <div class="stars-wrap">
+            <button type="button" class="star-btn" data-val="1">★</button>
+            <button type="button" class="star-btn" data-val="2">★</button>
+            <button type="button" class="star-btn" data-val="3">★</button>
+            <button type="button" class="star-btn" data-val="4">★</button>
+            <button type="button" class="star-btn" data-val="5">★</button>
+          </div>
+        </div>
+        <div class="pf-group">
+          <label>Comentario (opcional)</label>
+          <textarea id="calComentario" rows="3" placeholder="Escribe tu reseña…"></textarea>
+        </div>
+        <div class="alert" id="alertCalif"></div>
       </div>
-      <div class="modalBody" id="detailBody"></div>
-      <div class="modalFooter">
-        <button type="button" class="btnGhost" id="detailCancel">Cerrar</button>
-        <button type="button" class="btnGhostDanger" id="btnReportarViaje" style="display:none">⚠️ Reportar</button>
-        <button type="button" class="btnPrimarySm" id="btnSolicitar">Solicitar cupo</button>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-ghost" onclick="document.getElementById('modalCalificar').classList.add('hidden')">Cancelar</button>
+        <button type="submit" class="btn-modal-primary">Enviar calificación</button>
       </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══ MODAL: REPORTAR (RF10) ══════════════════════════ -->
+<div class="modal-overlay hidden" id="modalReporte">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Reportar usuario</h2>
+      <button class="modal-close" id="closeReporte">✕</button>
+    </div>
+    <form id="formReporte">
+      <div class="modal-body">
+        <p style="font-size:.85rem;color:var(--text-sub);margin-bottom:1rem;line-height:1.6">Tu reporte será revisado por el administrador. Proporciona un motivo claro y detallado (mínimo 10 caracteres).</p>
+        <input type="hidden" id="repReportadoId"/>
+        <input type="hidden" id="repViajeId"/>
+        <div class="pf-group">
+          <label>Motivo del reporte</label>
+          <textarea id="repMotivo" rows="4" placeholder="Describe la conducta indebida…" required></textarea>
+        </div>
+        <div class="alert" id="alertReporte"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-ghost" onclick="document.getElementById('modalReporte').classList.add('hidden')">Cancelar</button>
+        <button type="submit" class="btn-modal-danger">Enviar reporte</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══ MODAL: GPS TRACKING CONDUCTOR ══════════════════ -->
+<!-- Se muestra cuando el conductor inicia el viaje -->
+<div class="modal-overlay hidden" id="modalTracking">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>🚗 Viaje en curso</h2>
+      <button class="modal-close" id="closeTracking">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tracking-panel" style="margin-top:0;margin-bottom:.75rem">
+        <div class="tracking-dot" id="trackingDotConductor"></div>
+        <div class="tracking-label">
+          <strong>GPS activo — compartiendo ubicación</strong>
+          <small id="trackingTimestampConductor">Iniciando…</small>
+        </div>
+      </div>
+      <div class="map-container map-lg" id="mapEnCurso"></div>
+      <p style="font-size:.78rem;color:var(--text-sub);margin-top:.6rem;line-height:1.5">
+        Tu posición se envía en tiempo real a los pasajeros confirmados.<br>
+        Cuando termines, pulsa <strong>Finalizar viaje</strong>.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-modal-ghost" id="btnCerrarTracking">Minimizar</button>
+      <button type="button" class="btn-modal-danger" id="btnFinalizarDesdeTracking">Finalizar viaje</button>
     </div>
   </div>
+</div>
 
-  <!-- ══ MODAL: CALIFICAR (RF8) ══════════════════════════ -->
-  <div class="modalOverlay hidden" id="modalCalificar">
-    <div class="modal">
-      <div class="modalHeader">
-        <h2>Calificar</h2>
-        <button class="modalClose" id="closeCalificar">✕</button>
-      </div>
-      <form id="formCalificar">
-        <div class="modalBody">
-          <p style="font-size:.9rem;color:var(--textSecondary);margin-bottom:1rem">Calificando a: <strong id="calNombre"></strong></p>
-          <input type="hidden" id="calViajeId"/>
-          <input type="hidden" id="calEvaluadoId"/>
-          <input type="hidden" id="calPuntuacion"/>
-          <div class="pfGroup">
-            <label>Puntuación</label>
-            <div class="starsWrap">
-              <button type="button" class="starBtn" data-val="1">★</button>
-              <button type="button" class="starBtn" data-val="2">★</button>
-              <button type="button" class="starBtn" data-val="3">★</button>
-              <button type="button" class="starBtn" data-val="4">★</button>
-              <button type="button" class="starBtn" data-val="5">★</button>
-            </div>
-          </div>
-          <div class="pfGroup">
-            <label>Comentario (opcional)</label>
-            <textarea id="calComentario" rows="3" placeholder="Escribe tu reseña…"></textarea>
-          </div>
-          <div class="alert" id="alertCalif"></div>
-        </div>
-        <div class="modalFooter">
-          <button type="button" class="btnGhost" id="cancelCalificar" onclick="document.getElementById('modalCalificar').classList.add('hidden')">Cancelar</button>
-          <button type="submit" class="btnPrimarySm">Enviar calificación</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<!-- Toasts -->
+<div class="toast-container" id="toastContainer"></div>
 
-  <!-- ══ MODAL: REPORTAR (RF10) ══════════════════════════ -->
-  <div class="modalOverlay hidden" id="modalReporte">
-    <div class="modal">
-      <div class="modalHeader">
-        <h2>Reportar usuario</h2>
-        <button class="modalClose" id="closeReporte">✕</button>
-      </div>
-      <form id="formReporte">
-        <div class="modalBody">
-          <p style="font-size:.875rem;color:var(--textSecondary);margin-bottom:1rem">
-            Tu reporte será revisado por el administrador. Proporciona un motivo claro y detallado.
-          </p>
-          <input type="hidden" id="repReportadoId"/>
-          <input type="hidden" id="repViajeId"/>
-          <div class="pfGroup">
-            <label>Motivo del reporte</label>
-            <textarea id="repMotivo" rows="4" placeholder="Describe la conducta indebida (mínimo 10 caracteres)…" required></textarea>
-          </div>
-          <div class="alert" id="alertReporte"></div>
-        </div>
-        <div class="modalFooter">
-          <button type="button" class="btnGhost" onclick="document.getElementById('modalReporte').classList.add('hidden')">Cancelar</button>
-          <button type="submit" class="btnDanger">Enviar reporte</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<script src="/socket.io/socket.io.js"></script>
 
-  <!-- ══ TOAST ══════════════════════════════════════════════ -->
-  <div class="toastContainer" id="toastContainer"></div>
+<!-- ══ Cargador de Google Maps API (NUEVO) ════════════ -->
+<!-- La API key se inyecta dinámicamente desde /api/config/maps -->
+<script>
+  (async () => {
+    try {
+      const res  = await fetch("/api/config/maps");
+      const data = await res.json();
+      if (!data.apiKey) { console.warn("Google Maps API key no configurada."); return; }
+      const s = document.createElement("script");
+      s.src = `https://maps.googleapis.com/maps/api/js?key=${data.apiKey}&libraries=places,geometry&callback=_onGoogleMapsReady`;
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    } catch(e) { console.warn("No se pudo cargar Google Maps:", e); }
+  })();
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="js/home.js"></script>
+  // Callback global requerido por la API de Google Maps
+  window._onGoogleMapsReady = function() {
+    console.log("Google Maps listo.");
+    document.dispatchEvent(new Event("googleMapsReady"));
+  };
+</script>
+
+<script src="/js/maps.js"></script>    <!-- NUEVO: módulo URideMaps -->
+<script src="/js/home.js"></script>
 </body>
 </html>

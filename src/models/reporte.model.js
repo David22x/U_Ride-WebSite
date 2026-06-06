@@ -27,7 +27,7 @@ module.exports = sequelize.define(
     motivo: { type: DataTypes.TEXT, allowNull: false },
     evidencia: { type: DataTypes.STRING(255), allowNull: true },
     estado: {
-      type: DataTypes.ENUM("pendiente", "revisado", "cerrado"),
+      type: DataTypes.ENUM("pendiente", "revisado", "cerrado", "resuelto"),
       defaultValue: "pendiente",
     },
   },

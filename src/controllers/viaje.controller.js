@@ -100,3 +100,19 @@ exports.solicitudesPend = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.iniciarViaje = async (req, res, next) => {
+  try {
+    res.json(await viajeService.iniciarViaje(req.params.id, req.usuario.id));
+  } catch (e) {
+    next(e);
+  }
+};
+
+exports.finalizarViaje = async (req, res, next) => {
+  try {
+    res.json(await viajeService.finalizarViaje(req.params.id, req.usuario.id));
+  } catch (e) {
+    next(e);
+  }
+};
